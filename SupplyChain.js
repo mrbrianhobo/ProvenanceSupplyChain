@@ -173,8 +173,8 @@ contract SupplyChain {
 
             string temp;
             for(uint i = 0; i < owners[msg.sender].ownedItems.length; i++){
-                // temp += owners[msg.sender].ownedItems[i].iname;
-                // temp += " ";
+                temp.toSlice().concat(owners[msg.sender].ownedItems[i].iname.toSlice());
+                temp.toSlice().concat(" ".toSlice());
             }
             return temp;
 
