@@ -1,14 +1,18 @@
 pragma solidity ^0.4.6;
 
+import "github.com/Arachnid/solidity-stringutils/strings.sol";
+
 contract SupplyChain {
 
-    mapping(address => Owner) public owners; 
+    using strings for *;
+
+    mapping(address => Owner) public owners;
     mapping(uint => Item) items; //uint is a serial number
 
     int numOwners = 0;
     int numItems = 0;
 
-   
+
      struct Owner {
         address addr;
         string name;
@@ -68,8 +72,8 @@ contract SupplyChain {
         }
         string temp;
         for(uint i = 0; i < items[serial].ownerNameHistory.length; i++){
-            temp += items[serial].ownerNameHistory[i];
-            temp += " ";
+            temp.toSlice().concat(items[serial].ownerNameHistory[i].toSlice());
+            temp.toSlice().concat(" ".toSlice());
         }
         return temp;
 
@@ -83,8 +87,8 @@ contract SupplyChain {
 
         string temp;
         for(uint i = 0; i < items[serial].ownerNameHistory.length; i++){
-            temp += items[serial].ownerNameHistory[i];
-            temp += " ";
+            temp.toSlice().concat(items[serial].ownerNameHistory[i].toSlice());
+            temp.toSlice().concat(" ".toSlice());
         }
         return temp;
 
@@ -92,11 +96,12 @@ contract SupplyChain {
 
     function relinquish(uint serial) public returns(string){
         Item i = items[serial];
+        Owner o = owners[msg.sender];
         if(items[serial].identification != serial){
             return "There is no such item";
         }
 
-        Owner o = owners[msg.sender];
+
 
         bool contains = false;
 
@@ -109,7 +114,8 @@ contract SupplyChain {
 
         if(contains){
             i.giveUp = true; // set to false after item is transfered
-            return "You have marked"+ i.iname +"for transfer";
+            string memory retmsg = i.iname.toSlice().concat(" marked for transfer".toSlice());
+            return retmsg;
         }
         else {
             return "You do not own that item.";
@@ -136,7 +142,8 @@ contract SupplyChain {
 
         if(contains){
             i.giveUp = false; // set to false after item is transfered
-            return "You have marked"+ i.iname +"as \"to keep\"";
+            string memory ret = i.iname.toSlice().concat(" marked as 'to keep'.".toSlice());
+            return ret;
         }
         else {
             return "You do not own that item.";
@@ -186,8 +193,8 @@ contract SupplyChain {
 
             string temp;
             for(uint i = 0; i < owners[msg.sender].ownedItems.length; i++){
-                temp += owners[msg.sender].ownedItems[i].iname;
-                temp += " ";
+                // temp += owners[msg.sender].ownedItems[i].iname;
+                // temp += " ";
             }
             return temp;
 
