@@ -16,7 +16,7 @@ contract SupplyChain {
      struct Owner {
         address addr;
         string name;
-        Item[] ownedItems; //Cant use mapping because we want to be able to list out the owned items in a function
+        uint[] ownedItems; //Cant use mapping because we want to be able to list out the owned items in a function
     }
 
     struct Item {
@@ -33,7 +33,7 @@ contract SupplyChain {
         if (owners[msg.sender].addr == msg.sender) {
             return "You can't join again";
         }
-        Item[] temp;
+        uint[] temp;
         owners[msg.sender] = Owner(msg.sender, name, temp); //Add owner into mapping
         numOwners++;
         return "You have joined the contract!";
@@ -56,7 +56,7 @@ contract SupplyChain {
         items[serial] = Item(serial, n, firstOwner, false, owners[msg.sender]); //Add item into mapping
         numItems++; //Increment number of items
 
-        first.ownedItems.push(items[serial]);
+        first.ownedItems.push(serial);
 
         return "You have successfully added an item";
     }
@@ -87,7 +87,7 @@ contract SupplyChain {
         bool contains = false;
 
         for(uint x = 0; x < o.ownedItems.length; x++){  //Checks if the owner actually owns the item
-            if(o.ownedItems[x].identification == i.identification){
+            if(o.ownedItems[x] == i.identification){
                 contains = true;
                 break;
             }
@@ -115,7 +115,7 @@ contract SupplyChain {
         bool contains = false;
 
         for(uint x = 0; x < o.ownedItems.length; x++){  //Checks if the owner actually owns the item
-            if(o.ownedItems[x].identification == i.identification){
+            if(o.ownedItems[x] == i.identification){
                 contains = true;
                 break;
             }
@@ -152,10 +152,10 @@ contract SupplyChain {
             Owner curr = i.currentOwner;
             i.ownerHistory.push(newOwner);
             i.currentOwner = newOwner;
-            newOwner.ownedItems.push(i);
+            newOwner.ownedItems.push(i.identification);
 
             for(uint index = 0; index < curr.ownedItems.length; index++){ //Update previous owner data
-                if(curr.ownedItems[index].identification == i.identification){
+                if(curr.ownedItems[index] == i.identification){
                     updateOwnedItems(curr, index); //Remove the item from the previous owners owner's list
                     break;
                 }
@@ -173,7 +173,7 @@ contract SupplyChain {
 
             string temp;
             for(uint i = 0; i < owners[msg.sender].ownedItems.length; i++){
-                temp.toSlice().concat(owners[msg.sender].ownedItems[i].iname.toSlice());
+                temp.toSlice().concat(items[owners[msg.sender].ownedItems[i]].iname.toSlice());
                 temp.toSlice().concat(" ".toSlice());
             }
             return temp;
