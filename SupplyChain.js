@@ -22,7 +22,7 @@ contract SupplyChain {
     struct Item {
         uint identification; //Serial Number
         string iname;
-        Owner[] ownerHistory; //Can't use mapping because we need an order
+        address[] ownerHistory; //Can't use mapping because we need an order
         bool giveUp; //Does the current owner want to give up the item?
         Owner currentOwner;
 
@@ -46,12 +46,12 @@ contract SupplyChain {
         }
 
         Owner first = owners[msg.sender];
-        if(first.addr == msg.sender){
+        if(first.addr != msg.sender){
             return "You are not a valid owner";
         }
 
-        Owner[] firstOwner;
-        firstOwner.push(owners[msg.sender]); //Create list with first item as owner
+        address[] firstOwner;
+        firstOwner.push(msg.sender); //Create list with first item as owner
 
         items[serial] = Item(serial, n, firstOwner, false, owners[msg.sender]); //Add item into mapping
         numItems++; //Increment number of items
@@ -70,7 +70,7 @@ contract SupplyChain {
 
         string temp;
         for(uint i = 0; i < items[serial].ownerHistory.length; i++){
-            temp.toSlice().concat(items[serial].ownerHistory[i].name.toSlice());
+            temp.toSlice().concat(owners[items[serial].ownerHistory[i]].name.toSlice());
             temp.toSlice().concat(" ".toSlice());
         }
         return temp;
@@ -150,7 +150,7 @@ contract SupplyChain {
         if(i.giveUp){
             Owner newOwner = owners[msg.sender];
             Owner curr = i.currentOwner;
-            i.ownerHistory.push(newOwner);
+            i.ownerHistory.push(msg.sender);
             i.currentOwner = newOwner;
             newOwner.ownedItems.push(i.identification);
 
