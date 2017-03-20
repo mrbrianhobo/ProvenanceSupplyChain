@@ -97,22 +97,6 @@ contract SupplyChain {
     }
 
 
-    function lookupOwnerHistory(uint serial) public returns (string) {
-        if (items[serial].identification != serial) {
-            return "There is no such item";
-        }
-
-        string memory temp;
-        for (uint i = 0; i < items[serial].ownerHistory.length; i++) {
-            temp = temp.toSlice().concat(owners[items[serial].ownerHistory[i]].name.toSlice());
-            if (i < items[serial].ownerHistory.length - 1) {
-                temp = temp.toSlice().concat("-> ".toSlice());
-            }
-        }
-        return temp;
-
-    }
-
     function markForSale(uint serial, uint price) public returns (string) {
         Item i = items[serial];
         Owner o = owners[msg.sender];
@@ -136,8 +120,6 @@ contract SupplyChain {
                 break;
             }
         }
-
-        
 
         if (contains) {
             if(i.forSale){
@@ -176,8 +158,6 @@ contract SupplyChain {
             }
         }
 
-        
-
         if (contains) {
 
             if(!i.forSale){
@@ -197,30 +177,6 @@ contract SupplyChain {
         } else {
             return "You do not own that item.";
         }
-    }
-
-    function viewCurrentOwner(uint serial) public returns (string){
-        return items[serial].currentOwner.name;
-    }
-
-    function getItemsForSale() public returns (string) {
-        if (owners[msg.sender].addr == msg.sender) { 
-
-            string memory temp;
-            for (uint i = 0; i < itemsForSale.length; i++) {
-                temp = temp.toSlice().concat(uintToString(itemsForSale[i].identification).toSlice());
-                temp = temp.toSlice().concat(": ".toSlice());
-                temp = temp.toSlice().concat(itemsForSale[i].iname.toSlice());
-                temp = temp.toSlice().concat(" Cost: ".toSlice());
-                temp = temp.toSlice().concat(uintToString(itemsForSale[i].salePrice).toSlice());
-                if (i < owners[msg.sender].ownedItems.length - 1) {
-                    temp = temp.toSlice().concat(", ".toSlice());
-                }
-            }
-            return temp;
-
-        }
-        return "There is an error";
     }
 
 
@@ -306,6 +262,47 @@ contract SupplyChain {
         }
         return "There is an error";
     }
+
+    function getItemsForSale() public returns (string) {
+        if (owners[msg.sender].addr == msg.sender) { 
+
+            string memory temp;
+            for (uint i = 0; i < itemsForSale.length; i++) {
+                temp = temp.toSlice().concat(uintToString(itemsForSale[i].identification).toSlice());
+                temp = temp.toSlice().concat(": ".toSlice());
+                temp = temp.toSlice().concat(itemsForSale[i].iname.toSlice());
+                temp = temp.toSlice().concat(" Cost: ".toSlice());
+                temp = temp.toSlice().concat(uintToString(itemsForSale[i].salePrice).toSlice());
+                if (i < owners[msg.sender].ownedItems.length - 1) {
+                    temp = temp.toSlice().concat(", ".toSlice());
+                }
+            }
+            return temp;
+
+        }
+        return "There is an error";
+    }
+
+    function getOwnerHistory(uint serial) public returns (string) {
+        if (items[serial].identification != serial) {
+            return "There is no such item";
+        }
+
+        string memory temp;
+        for (uint i = 0; i < items[serial].ownerHistory.length; i++) {
+            temp = temp.toSlice().concat(owners[items[serial].ownerHistory[i]].name.toSlice());
+            if (i < items[serial].ownerHistory.length - 1) {
+                temp = temp.toSlice().concat("-> ".toSlice());
+            }
+        }
+        return temp;
+    }
+
+    function getCurrentOwner(uint serial) public returns (string){
+        return items[serial].currentOwner.name;
+    }
+
+
 
     function uintToString(uint v) private constant returns (string) {
       bytes32 ret;
