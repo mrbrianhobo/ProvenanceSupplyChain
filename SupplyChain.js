@@ -52,9 +52,8 @@ contract SupplyChain {
         }
         uint256 amount = msg.value/1000000000000000000;
         owners[msg.sender].value += amount;
-        // bytes32 data = bytes32(amount);
-        // return "You have successfully deposited: ".toSlice().concat(intToString(data).toSlice());
-        return "You have successfully deposited the money";
+        return "You have successfully deposited: ".toSlice().concat(uintToString(amount).toSlice());
+        // return "You have successfully deposited the money";
 
     }
 
@@ -233,20 +232,28 @@ contract SupplyChain {
         return "There is an error";
     }
 
-    function bytes32ToString (bytes32 data) returns (string) {
+    function uintToString(uint v) constant returns (string) {
+      bytes32 ret;
+        if (v == 0) {
+             ret = '0';
+        }
+        else {
+             while (v > 0) {
+                  ret = bytes32(uint(ret) / (2 ** 8));
+                  ret |= bytes32(((v % 10) + 48) * 2 ** (8 * 31));
+                  v /= 10;
+             }
+        }
+
         bytes memory bytesString = new bytes(32);
         for (uint j=0; j<32; j++) {
-            byte char = byte(bytes32(uint(data) * 2 ** (8 * j)));
-            if (char != 0) {
-                bytesString[j] = char;
-            }
+             byte char = byte(bytes32(uint(ret) * 2 ** (8 * j)));
+             if (char != 0) {
+                  bytesString[j] = char;
+             }
         }
-        return string(bytesString);
-    }
 
-   function intToString(bytes32 myInteger) returns (string){
-        string memory myString= bytes32ToString( myInteger );
-        return myString;
-   } 
+        return string(bytesString);
+    } 
 
 }
