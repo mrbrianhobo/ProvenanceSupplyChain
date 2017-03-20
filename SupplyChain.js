@@ -1,4 +1,4 @@
-pragma solidity ^0.4.6;
+pragma solidity ^0.4.9;
 
 import "github.com/Arachnid/solidity-stringutils/strings.sol";
 
@@ -11,7 +11,6 @@ contract SupplyChain {
 
     int numOwners = 0;
     int numItems = 0;
-
 
      struct Owner {
         address addr;
@@ -87,11 +86,12 @@ contract SupplyChain {
             return "You are not a valid owner";
         }
 
-        items[serial] = Item(serial, n, new address[](0), false, owners[msg.sender],  2**256 - 1); //Add item into mapping
+        first.ownedItems.push(serial);
+        items[serial] = Item(serial, n, new address[](0), false, first,  2**256 - 1); //Add item into mapping
         items[serial].ownerHistory.push(msg.sender); //adds owner of item as first owner
         numItems++; //Increment number of items
 
-        first.ownedItems.push(serial);
+        
 
         return "You have successfully added an item: ".toSlice().concat(n.toSlice());
     }
@@ -166,11 +166,7 @@ contract SupplyChain {
             i.forSale = false; // set to false after item is transfered
             i.salePrice =  2**256 - 1;
 
-            for(uint n = 0; n < itemsForSale.length; n++){
-                if(itemsForSale[n].identification == i.identification){
-                    updateItems(n);
-                }
-            }
+            updateItems(i.identification);
 
             string memory ret = i.iname.toSlice().concat(" is now not for sale.".toSlice());
             return ret;
@@ -180,29 +176,12 @@ contract SupplyChain {
     }
 
 
-    function updateOwnedItems (Owner o, uint loc) private {  //updates OwnedItems
-        if (o.ownedItems.length <= 0 || loc >=  o.ownedItems.length) {
-            return;
-        }
-        delete o.ownedItems[loc];
-        for (uint i = loc; i < o.ownedItems.length - 1; i++) {
-            o.ownedItems[i] = o.ownedItems[i + 1];
-        }
-        delete o.ownedItems[i + 1];
-    }
-
-    function updateItems (uint loc) private {  //update itemsForSale
-        if (itemsForSale.length <= 0 || loc >=  itemsForSale.length) {
-            return;
-        }
-        for (uint i = loc; i < itemsForSale.length - 1; i++) {
-            itemsForSale[i] = itemsForSale[i + 1];
-        }
-        delete itemsForSale[i + 1];
-    }
-
     function purchase(uint serial) public returns (string) {  //New owner obtains an item that is marked for relinquishing
         Item i = items[serial];
+
+        if(owners[msg.sender].addr != msg.sender){
+            return "You are not an owner";
+        }
         if (items[serial].identification != serial) {
             return "There is no such item";
         }
@@ -216,27 +195,14 @@ contract SupplyChain {
             }
             newOwner.value -= i.salePrice;
             Owner curr = i.currentOwner;
-            i.ownerHistory.push(msg.sender);
-            
-            
-            newOwner.ownedItems.push(i.identification);
 
-            for (uint index = 0; index < curr.ownedItems.length; index++) { //Update previous owner data
-                if (curr.ownedItems[index] == i.identification) {
-                    updateOwnedItems(curr, index); //Remove the item from the previous owners owner's list
-                    return "ok";
-                    break;
-                }
-            }
+            updateOwnedItems(owners[curr.addr], serial); //Remove the item from the previous owners owner's list
+            newOwner.ownedItems.push(i.identification);
+            i.ownerHistory.push(msg.sender);
             i.currentOwner = newOwner;
             i.forSale = false;
 
-            // for(uint n = 0; n < itemsForSale.length; n++){
-            //     if(itemsForSale[n].identification == i.identification){
-            //         updateItems(n);
-            //         break;
-            //     }
-            // }
+            updateItems(i.identification);
 
             return "You have purchased the item";
         } else {
@@ -245,12 +211,39 @@ contract SupplyChain {
 
     }
 
+    function updateOwnedItems (Owner o, uint ident) private{  //updates OwnedItems
+        if (o.ownedItems.length <= 0) {
+            throw;
+        }
+        uint[] temp;
+        for (uint i = 0; i < o.ownedItems.length; i++) {
+            if(o.ownedItems[i] != ident){
+                temp.push(o.ownedItems[i]);
+            }
+        }
+        o.ownedItems = temp;
+    }
+
+    function updateItems (uint ident) private {  //update itemsForSale
+        if (itemsForSale.length <= 0 ) {
+            throw;
+        }
+        Item[] temp;
+
+        for (uint i = 0; i < itemsForSale.length; i++) {
+            if(itemsForSale[i].identification != ident){
+                temp.push(itemsForSale[i]);
+            }
+        }
+        itemsForSale = temp;
+    }
+
     function getOwnedItems() public returns (string) {
         if (owners[msg.sender].addr == msg.sender) { 
 
             string memory temp;
             for (uint i = 0; i < owners[msg.sender].ownedItems.length; i++) {
-                temp = temp.toSlice().concat(uintToString(itemsForSale[i].identification).toSlice());
+                temp = temp.toSlice().concat(uintToString(owners[msg.sender].ownedItems[i]).toSlice());
                 temp = temp.toSlice().concat(": ".toSlice());
                 temp = temp.toSlice().concat(items[owners[msg.sender].ownedItems[i]].iname.toSlice());
                 if (i < owners[msg.sender].ownedItems.length - 1) {
@@ -299,6 +292,9 @@ contract SupplyChain {
     }
 
     function getCurrentOwner(uint serial) public returns (string){
+        if(items[serial].identification != serial){
+            return "That is not a valid item";
+        }
         return items[serial].currentOwner.name;
     }
 
