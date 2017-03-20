@@ -195,6 +195,7 @@ contract SupplyChain {
             }
             newOwner.value -= i.salePrice;
             Owner curr = i.currentOwner;
+            curr.value += i.salePrice;
 
             updateOwnedItems(owners[curr.addr], serial); //Remove the item from the previous owners owner's list
             newOwner.ownedItems.push(i.identification);
