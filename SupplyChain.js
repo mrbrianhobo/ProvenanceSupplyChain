@@ -195,8 +195,8 @@ contract SupplyChain {
             newOwner.value -= i.salePrice;
             Owner curr = owners[i.currentOwner.addr];
             curr.value += i.salePrice;
-
-            updateOwnedItems(owners[curr.addr], serial); //Remove the item from the previous owners owner's list
+            
+            curr.ownedItems = remove(curr.ownedItems,serial); //Remove the item from the previous owners owner's list
             newOwner.ownedItems.push(i.identification);
             i.ownerHistory.push(msg.sender);
             i.currentOwner = newOwner;
@@ -211,13 +211,28 @@ contract SupplyChain {
 
     }
 
+    function remove(uint[] array, uint val) private returns (uint[]) {
+        uint[][1] temp;
+        temp[0] = array;
+        for (uint i = 0; i < array.length; i++) {
+            if(array[i] == val){
+                delete array[i];
+                for (uint j = i; j < array.length - 1; j++) {
+                    array[i] = array[i + 1];
+                }
+                temp[0].length -= 1;
+            }
+        }
+        return temp[0];
+    }
+
     function updateOwnedItems(Owner o, uint ident) private {  //updates OwnedItems
         if (o.ownedItems.length <= 0) {
             throw;
         }
         uint[] temp;
         for (uint i = 0; i < o.ownedItems.length; i++) {
-            if(o.ownedItems[i] != ident){
+            if(o.ownedItems[i] == ident){
                 temp.push(o.ownedItems[i]);
             }
         }
