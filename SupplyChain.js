@@ -213,13 +213,14 @@ contract SupplyChain {
 
     function remove(uint[] array, uint val) private returns (uint[]) {
         uint[][1] temp;
-        temp[0] = array;
+        
         for (uint i = 0; i < array.length; i++) {
-            if(array[i] == val){
+            if (array[i] == val) {
                 delete array[i];
                 for (uint j = i; j < array.length - 1; j++) {
-                    array[i] = array[i + 1];
+                    array[j] = array[j + 1];
                 }
+                temp[0] = array;
                 temp[0].length -= 1;
             }
         }
@@ -279,7 +280,7 @@ contract SupplyChain {
                 temp = temp.toSlice().concat(uintToString(itemsForSale[i].identification).toSlice());
                 temp = temp.toSlice().concat(": ".toSlice());
                 temp = temp.toSlice().concat(itemsForSale[i].iname.toSlice());
-                temp = temp.toSlice().concat(" Cost: ".toSlice());
+                temp = temp.toSlice().concat(", Cost: ".toSlice());
                 temp = temp.toSlice().concat(uintToString(itemsForSale[i].salePrice).toSlice());
                 if (i < itemsForSale.length - 1) {
                     temp = temp.toSlice().concat(", ".toSlice());
