@@ -104,10 +104,12 @@ contract SupplyChain {
             return "There is no such item";
         }
 
-        string temp;
+        string memory temp;
         for(uint i = 0; i < items[serial].ownerHistory.length; i++){
-            temp.toSlice().concat(owners[items[serial].ownerHistory[i]].name.toSlice());
-            temp.toSlice().concat(" ".toSlice());
+            temp = temp.toSlice().concat(owners[items[serial].ownerHistory[i]].name.toSlice());
+            if(i < items[serial].ownerHistory.length - 1){
+                temp = temp.toSlice().concat(", ".toSlice());
+            }
         }
         return temp;
 
@@ -218,10 +220,12 @@ contract SupplyChain {
     function getOwnedItems() public returns (string){
         if(owners[msg.sender].addr == msg.sender){
 
-            string temp;
+            string memory temp;
             for(uint i = 0; i < owners[msg.sender].ownedItems.length; i++){
-                temp.toSlice().concat(items[owners[msg.sender].ownedItems[i]].iname.toSlice());
-                temp.toSlice().concat(" ".toSlice());
+                temp = temp.toSlice().concat(items[owners[msg.sender].ownedItems[i]].iname.toSlice());
+                if(i < items[serial].ownedItems.length - 1){
+                    temp = temp.toSlice().concat(", ".toSlice());
+                }
             }
             return temp;
 
