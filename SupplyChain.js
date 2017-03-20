@@ -17,14 +17,16 @@ contract SupplyChain {
         address addr;
         string name;
         uint[] ownedItems; //Cant use mapping because we want to be able to list out the owned items in a function
+        uint value;
     }
 
     struct Item {
         uint identification; //Serial Number
         string iname;
         address[] ownerHistory; //Can't use mapping because we need an order
-        bool giveUp; //Does the current owner want to give up the item?
+        bool forSale; //Does the current owner want to give up the item?
         Owner currentOwner;
+        uint salePrice;
 
     }
 
@@ -34,9 +36,43 @@ contract SupplyChain {
             return "You can't join again";
         }
         uint[] temp;
-        owners[msg.sender] = Owner(msg.sender, name, temp); //Add owner into mapping
+        owners[msg.sender] = Owner(msg.sender, name, temp, 0); //Add owner into mapping
         numOwners++;
         return "You have joined the contract!";
+
+    }
+
+    function deposit() public payable returns(string){
+        if(msg.value <= 0){
+            return "That is not a valid deposit.";
+        }
+
+        if(owners[msg.sender].addr != msg.sender){
+            throw;
+        }
+
+        owners[msg.sender].value += msg.value/1000000000000000000;
+
+        return "You have successfully deposited the money";
+
+    }
+
+    function viewFunds() public returns(uint256){
+        if(owners[msg.sender].addr != msg.sender){
+            throw;
+        }
+        return owners[msg.sender].value;
+    }
+
+    function withdraw() public payable returns(string){
+        if(owners[msg.sender].addr != msg.sender){
+            throw;
+        }
+        if(!msg.sender.send(owners[msg.sender].value)){
+            throw;
+        }
+        owners[msg.sender].value = 0;
+        return "You have withdrawn all your funds from the contract";
 
     }
 
@@ -53,7 +89,7 @@ contract SupplyChain {
         address[] firstOwner;
         firstOwner.push(msg.sender); //Create list with first item as owner
 
-        items[serial] = Item(serial, n, firstOwner, false, owners[msg.sender]); //Add item into mapping
+        items[serial] = Item(serial, n, firstOwner, false, owners[msg.sender],  2**256 - 1); //Add item into mapping
         numItems++; //Increment number of items
 
         first.ownedItems.push(serial);
@@ -77,11 +113,15 @@ contract SupplyChain {
 
     }
 
-    function relinquish(uint serial) public returns(string){
+    function markForSale(uint serial, uint price) public returns(string){
         Item i = items[serial];
         Owner o = owners[msg.sender];
         if(items[serial].identification != serial){
             return "There is no such item";
+        }
+
+        if(price < 0){
+            return "Not a valid price";
         }
 
         bool contains = false;
@@ -94,8 +134,9 @@ contract SupplyChain {
         }
 
         if(contains){
-            i.giveUp = true; // set to false after item is transfered
-            string memory retmsg = i.iname.toSlice().concat(" marked for transfer".toSlice());
+            i.forSale = true; // set to false after item is transfered
+            i.salePrice = price;
+            string memory retmsg = i.iname.toSlice().concat(" marked for sale".toSlice());
             return retmsg;
         }
         else {
@@ -104,7 +145,7 @@ contract SupplyChain {
 
     }
 
-    function undoRelinquish(uint serial) public returns(string){
+    function undoForSale(uint serial) public returns(string){
         Item i = items[serial];
         if(items[serial].identification != serial){
             return "There is no such item";
@@ -122,8 +163,9 @@ contract SupplyChain {
         }
 
         if(contains){
-            i.giveUp = false; // set to false after item is transfered
-            string memory ret = i.iname.toSlice().concat(" marked as 'to keep'.".toSlice());
+            i.forSale = false; // set to false after item is transfered
+            i.salePrice =  2**256 - 1;
+            string memory ret = i.iname.toSlice().concat(" is now not for sale.".toSlice());
             return ret;
         }
         else {
@@ -142,13 +184,17 @@ contract SupplyChain {
         delete o.ownedItems[i+1];
     }
 
-    function obtain(uint serial) public returns(string){  //New owner obtains an item that is marked for relinquishing
+    function purchase(uint serial) public returns(string){  //New owner obtains an item that is marked for relinquishing
          Item i = items[serial];
         if(items[serial].identification != serial){
             return "There is no such item";
         }
-        if(i.giveUp){
+        if(i.forSale){
             Owner newOwner = owners[msg.sender];
+            if(newOwner.value < i.salePrice){
+                return "You don't have enough money";
+            }
+            newOwner.value -= i.salePrice;
             Owner curr = i.currentOwner;
             i.ownerHistory.push(msg.sender);
             i.currentOwner = newOwner;
@@ -160,6 +206,7 @@ contract SupplyChain {
                     break;
                 }
             }
+            return "You have purchased the item";
         }
         else {
             return "Item not marked to be transfered/sold.";
