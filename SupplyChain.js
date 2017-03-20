@@ -50,9 +50,10 @@ contract SupplyChain {
         if(owners[msg.sender].addr != msg.sender){
             throw;
         }
-
-        owners[msg.sender].value += msg.value/1000000000000000000;
-
+        uint256 amount = msg.value/1000000000000000000;
+        owners[msg.sender].value += amount;
+        // bytes32 data = bytes32(amount);
+        // return "You have successfully deposited: ".toSlice().concat(intToString(data).toSlice());
         return "You have successfully deposited the money";
 
     }
@@ -94,7 +95,7 @@ contract SupplyChain {
 
         first.ownedItems.push(serial);
 
-        return "You have successfully added an item";
+        return "You have successfully added an item: ".toSlice().concat(n.toSlice());
     }
 
 
@@ -216,14 +217,13 @@ contract SupplyChain {
 
     }
 
-
     function getOwnedItems() public returns (string){
         if(owners[msg.sender].addr == msg.sender){
 
             string memory temp;
             for(uint i = 0; i < owners[msg.sender].ownedItems.length; i++){
                 temp = temp.toSlice().concat(items[owners[msg.sender].ownedItems[i]].iname.toSlice());
-                if(i < items[serial].ownedItems.length - 1){
+                if(i < owners[msg.sender].ownedItems.length - 1){
                     temp = temp.toSlice().concat(", ".toSlice());
                 }
             }
@@ -233,6 +233,20 @@ contract SupplyChain {
         return "There is an error";
     }
 
+    function bytes32ToString (bytes32 data) returns (string) {
+        bytes memory bytesString = new bytes(32);
+        for (uint j=0; j<32; j++) {
+            byte char = byte(bytes32(uint(data) * 2 ** (8 * j)));
+            if (char != 0) {
+                bytesString[j] = char;
+            }
+        }
+        return string(bytesString);
+    }
 
+   function intToString(bytes32 myInteger) returns (string){
+        string memory myString= bytes32ToString( myInteger );
+        return myString;
+   } 
 
 }
