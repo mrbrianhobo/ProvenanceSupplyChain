@@ -16,11 +16,13 @@
   </head>
   <body>
 
+    <div id="insert-navbar"></div>
+
     <h2>Manage Funds</h2>
-    <input type="number" placeholder="Withdraw Amount"></input>
+    <input id="withdraw-input" type="number" placeholder="Withdraw Amount"></input>
     <button id="withdraw-submit" type="button" class="btn btn-default">Withdraw</button>
 
-    <input type="number" placeholder="Deposit Amount"></input>
+    <input id="deposit-input" type="number" placeholder="Deposit Amount"></input>
     <button id="deposit-submit" type="button" class="btn btn-default">Deposit</button>
 
 
@@ -30,7 +32,15 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+            $("#insert-navbar").load("nav.html");
 
+            $('#withdraw-submit').on('click', function(event) {
+                App.withdraw(parseInt($('#withdraw-input').val()));
+            });
+
+            $('#deposit-submit').on('click', function(event) {
+                App.deposit(parseInt($('#deposit-input').val()));
+            });
 
         });
 

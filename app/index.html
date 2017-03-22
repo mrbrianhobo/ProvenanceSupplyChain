@@ -29,10 +29,14 @@
 
         $(document).ready(function() {
 
-            $("#insert-navbar").load("nav.html");
+            // Remove random injected CSS
+            // $("head style").remove();
+
+            // $("#insert-navbar").load("nav.html");
 
             $('#join-submit').on('click', function(event) {
                 App.joinContract($('#join-input').val());
+                window.location = "items.html";
             });
 
 
