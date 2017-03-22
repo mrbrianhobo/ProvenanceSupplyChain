@@ -2,7 +2,7 @@
 SupplyChain Framework written in Solidity.
 
 ## Features ##
- * Desposting/Withdrawing ether into the contract
+ * Depositing/Withdrawing ether into the contract
  * Adding into the contract
  * Selling items to peers in the contract
  * Tracking owner history of items
