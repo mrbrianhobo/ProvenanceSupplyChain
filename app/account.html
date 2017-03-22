@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Supply Chain</title>
+    <title>My Account</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -16,8 +16,12 @@
   </head>
   <body>
 
-    <input id="join-input" placeholder="Your Name"></input>
-    <button id="join-submit" type="button" class="btn btn-default">Join</button>
+    <h2>Manage Funds</h2>
+    <input type="number" placeholder="Withdraw Amount"></input>
+    <button id="withdraw-submit" type="button" class="btn btn-default">Withdraw</button>
+
+    <input type="number" placeholder="Deposit Amount"></input>
+    <button id="deposit-submit" type="button" class="btn btn-default">Deposit</button>
 
 
     <script src="./app.js"></script>
@@ -26,10 +30,6 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-
-            $('#join-submit').on('click', function(event) {
-                App.joinContract($('#join-input').val());
-            });
 
 
         });

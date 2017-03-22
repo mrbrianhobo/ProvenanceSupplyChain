@@ -38,13 +38,14 @@ window.App = {
 
       accounts = accs;
       account = accounts[0];
+
     });
   },
 
   setStatus: function(message) {
     // var status = document.getElementById("status");
     // status.innerHTML = message;
-    console.log(message);
+    console.log("Status: " + message);
   },
   //
   // refreshBalance: function() {

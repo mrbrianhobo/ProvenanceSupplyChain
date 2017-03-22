@@ -165,7 +165,7 @@ contract SupplyChain {
             i.forSale = false; // set to false after item is transfered
             i.salePrice =  2**256 - 1;
 
-            updateItems(i.identification);
+            // TODO uncomment updateItems(i.identification);
 
             string memory ret = i.iname.toSlice().concat(" is now not for sale.".toSlice());
             return ret;
@@ -196,13 +196,14 @@ contract SupplyChain {
             Owner curr = owners[i.currentOwner.addr];
             curr.value += i.salePrice;
 
-            curr.ownedItems = remove(curr.ownedItems,serial); //Remove the item from the previous owners owner's list
+            // TODO uncomment
+            // curr.ownedItems = remove(curr.ownedItems,serial); //Remove the item from the previous owners owner's list
             newOwner.ownedItems.push(i.identification);
             i.ownerHistory.push(msg.sender);
             i.currentOwner = newOwner;
             i.forSale = false;
 
-            updateItems(i.identification);
+            // TODO uncomment updateItems(i.identification);
 
             return "You have purchased the item: ".toSlice().concat(i.iname.toSlice());
         } else {
@@ -211,6 +212,7 @@ contract SupplyChain {
 
     }
 
+/*
     function remove(uint[] array, uint val) private returns (uint[]) {
         uint[][1] memory temp;
 
@@ -221,7 +223,7 @@ contract SupplyChain {
                     array[j] = array[j + 1];
                 }
                 temp[0] = array;
-                temp[0].length -= 1;
+                //temp[0].length -= 1;
             }
         }
         return temp[0];
@@ -240,11 +242,12 @@ contract SupplyChain {
         o.ownedItems = temp;
     }
 
+
     function updateItems(uint ident) private {  //update itemsForSale
         if (itemsForSale.length <= 0 ) {
             throw;
         }
-        Item[] memory temp;
+        Item[] temp;
 
         for (uint i = 0; i < itemsForSale.length; i++) {
             if(itemsForSale[i].identification != ident){
@@ -253,6 +256,7 @@ contract SupplyChain {
         }
         itemsForSale = temp;
     }
+*/
 
     function getOwnedItems() public returns (string) {
         if (owners[msg.sender].addr == msg.sender) {
