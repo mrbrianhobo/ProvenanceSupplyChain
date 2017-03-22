@@ -49,13 +49,14 @@
             $("#insert-navbar").load("nav.html");
 
             function displayBalance() {
+                alert("diplaying");
                 var balanceString = "Current Balance: $";
                 var balance = App.viewFunds();
-                if (parseInt(balance)) {
-                    balanceString += balance;
-                } else {
+                // if (parseInt(balance)) {
+                //     balanceString += balance;
+                // } else {
                     balanceString += "90";
-                }
+                // }
 
                 $("#balance-display").text(balanceString);
             }

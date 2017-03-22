@@ -16,6 +16,8 @@
   </head>
   <body>
 
+    <div id="insert-navbar"></div>
+
     <input id="join-input" placeholder="Your Name"></input>
     <button id="join-submit" type="button" class="btn btn-default">Join</button>
 
@@ -26,6 +28,8 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+
+            $("#insert-navbar").load("nav.html");
 
             $('#join-submit').on('click', function(event) {
                 App.joinContract($('#join-input').val());

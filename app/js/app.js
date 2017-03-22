@@ -47,49 +47,12 @@ window.App = {
     // status.innerHTML = message;
     console.log("Status: " + message);
   },
-  //
-  // refreshBalance: function() {
-  //   var self = this;
-  //
-  //   var meta;
-  //   SupplyChain.deployed().then(function(instance) {
-  //     meta = instance;
-  //     return meta.getBalance.call(account, {from: account});
-  //   }).then(function(value) {
-  //     var balance_element = document.getElementById("balance");
-  //     balance_element.innerHTML = value.valueOf();
-  //   }).catch(function(e) {
-  //     console.log(e);
-  //     self.setStatus("Error getting balance; see log.");
-  //   });
-  // },
-  //
-  // sendCoin: function() {
-  //   var self = this;
-  //
-  //   var amount = parseInt(document.getElementById("amount").value);
-  //   var receiver = document.getElementById("receiver").value;
-  //
-  //   this.setStatus("Initiating transaction... (please wait)");
-  //
-  //   var meta;
-  //   SupplyChain.deployed().then(function(instance) {
-  //     meta = instance;
-  //     return meta.sendCoin(receiver, amount, {from: account});
-  //   }).then(function() {
-  //     self.setStatus("Transaction complete!");
-  //     self.refreshBalance();
-  //   }).catch(function(e) {
-  //     console.log(e);
-  //     self.setStatus("Error sending coin; see log.");
-  //   });
-  // }
 
   joinContract: function(name) {
       var self = this;
 
       SupplyChain.deployed().then(function(instance) {
-          instance.join(name);
+          instance.join(name, {from: account});
       }).then(function() {
           self.setStatus(name + " joined contract successfully.");
       }).catch(function(e) {
@@ -103,7 +66,8 @@ window.App = {
       var funds;
 
       SupplyChain.deployed().then(function(instance) {
-          funds = instance.viewFunds();
+          funds = instance.viewFunds({from: account});
+          console.log(funds);
       }).then(function() {
         //   self.setStatus(name + " joined contract successfully.");
       }).catch(function(e) {
