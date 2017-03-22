@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Supply Chain Items</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div id="insert-navbar"></div>
+
+    <div class="container">
+        <table class="table" id="items-table">
+            <th>Item</th>
+            <th>Owner</th>
+            <th>History</th>
+        </table>
+    </div>
+
+
+    <script src="./app.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            // Remove random injected CSS
+            $("head style").remove();
+
+            $( ["5", "6", "1", "123", "24"] ).each(function(i, item) {
+                // "<td><button type='" + item + "-'></td>"
+                var item = parseInt(item);
+                var history = "A -> B -> C"; // App.getItemHistory(item);
+                $("#items-table").append("<tr><td>" + item + "</td><td>" + "owner" + item + "</td><td>" + history + "</td></tr>");
+            // $( App.getItemsForSale().split(',') ).each(function(item) {
+                // $("#items-table").append("<tr><td>" + item + "</td><td>" + App.getCurrentOwner(parseInt(item)) + "</td></tr>");
+            });
+
+            $("#insert-navbar").load("nav.html");
+
+            function displayBalance() {
+                var balanceString = "Current Balance: $";
+                var balance = App.viewFunds();
+                if (parseInt(balance)) {
+                    balanceString += balance;
+                } else {
+                    balanceString += "90";
+                }
+
+                $("#balance-display").text(balanceString);
+            }
+
+            displayBalance();
+
+        });
+
+    </script>
+  </body>
+</html>

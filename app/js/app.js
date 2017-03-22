@@ -96,6 +96,22 @@ window.App = {
           console.log(e);
           self.setStatus(name + " failed to join contract.");
       });
+  },
+
+  viewFunds: function() {
+      var self = this;
+      var funds;
+
+      SupplyChain.deployed().then(function(instance) {
+          funds = instance.viewFunds();
+      }).then(function() {
+        //   self.setStatus(name + " joined contract successfully.");
+      }).catch(function(e) {
+          console.log(e);
+        //   self.setStatus(name + " failed to join contract.");
+      });
+
+      return funds;
   }
 
 
