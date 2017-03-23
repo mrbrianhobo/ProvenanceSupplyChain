@@ -22157,10 +22157,22 @@ module.exports = {
 			"links": {},
 			"address": "0x5fbe54edea6213475125e1d6caf684164dfdc528",
 			"updated_at": 1490223674884
+		},
+		"1490236416513": {
+			"events": {},
+			"links": {},
+			"address": "0x2224de3eaf147cfdb7209ff4c79e9d9fb2b422e0",
+			"updated_at": 1490236424329
+		},
+		"1490239126746": {
+			"events": {},
+			"links": {},
+			"address": "0x49440181f05f652bcb36e5e3a9b1894553e0b253",
+			"updated_at": 1490239132373
 		}
 	},
 	"schema_version": "0.0.5",
-	"updated_at": 1490223674884
+	"updated_at": 1490239132373
 };
 
 /***/ }),
@@ -25556,7 +25568,7 @@ exports = module.exports = __webpack_require__(81)();
 
 
 // module
-exports.push([module.i, "body {\n  margin-left: 25%;\n  margin-right: 25%;\n  margin-top: 10%;\n  font-family: \"Open Sans\", sans-serif;\n}\n\nlabel {\n  display: inline-block;\n  width: 100px;\n}\n\ninput {\n  width: 500px;\n  padding: 5px;\n  font-size: 16px;\n}\n\nbutton {\n  font-size: 16px;\n  padding: 5px;\n}\n\nh1, h2 {\n  display: inline-block;\n  vertical-align: middle;\n  margin-top: 0px;\n  margin-bottom: 10px;\n}\n\nh2 {\n  color: #AAA;\n  font-size: 32px;\n}\n\nh3 {\n  font-weight: normal;\n  color: #AAA;\n  font-size: 24px;\n}\n\n.black {\n  color: black;\n}\n\n#balance {\n  color: black;\n}\n\n.hint {\n  color: #666;\n}\n", ""]);
+exports.push([module.i, "body {\n  /*margin-left: 25%;\n  margin-right: 25%;*/\n  /*margin-top: 10%;*/\n  font-family: \"Open Sans\", sans-serif;\n}\n\nbody#index {\n    margin-left: 25%;\n    margin-right: 25%;\n    margin-top: 10%;\n}\n\nlabel {\n  display: inline-block;\n  width: 100px;\n}\n\ninput {\n  width: 500px;\n  padding: 5px;\n  font-size: 16px;\n}\n\nbutton {\n  font-size: 16px;\n  padding: 5px;\n}\n\nh1, h2 {\n  display: inline-block;\n  vertical-align: middle;\n  margin-top: 0px;\n  margin-bottom: 10px;\n}\n\nh2 {\n  color: #AAA;\n  font-size: 32px;\n}\n\nh3 {\n  font-weight: normal;\n  color: #AAA;\n  font-size: 24px;\n}\n\n.black {\n  color: black;\n}\n\n#balance {\n  color: black;\n}\n\n.hint {\n  color: #666;\n}\n\nth {\n    background-color: #eeeeee;\n}\n", ""]);
 
 // exports
 

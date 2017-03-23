@@ -19,10 +19,13 @@
     <div id="insert-navbar"></div>
 
     <div class="container">
+        <h2>Items For Sale</h2>
         <table class="table" id="items-table">
             <th>Item</th>
+            <th>Price</th>
             <th>Owner</th>
             <th>History</th>
+            <th></th>
         </table>
     </div>
 
@@ -34,22 +37,27 @@
 
         $(document).ready(function() {
 
-            // Remove random injected CSS
-            $("head style").remove();
-
-            $( ["5", "6", "1", "123", "24"] ).each(function(i, item) {
+            histories = ["PharmaManu &#x2192 ChemlabsRX &#x2192 Pfizer",
+                         "Bayer &#x2192 XOMA Ltd.",
+                         "Catalent Solutions &#x2192 BioPharma",
+                         "Adams LLC &#x2192 Napo &#x2192 Transcept Labs &#x2192 Otsuka USA",
+                         "Celgene &#x2192 ChemRX &#x2192 XOMA Ltd."];
+            owners = ["Pfizer", "XOMA Ltd.", "BioPharma", "Otsuka USA", "XOMA Ltd."];
+            prices = ["$1500/g", "$19.12/mg", "$45/barrel", "$24.53/pill", "$190/gallon"];
+            for (i = 0; i < 10; i++) {
+            $( ["Amoxicillin", "Pseudoephedrine", "Esomeprazole Magnesium", "Fluoxetine", "Duloxetine"] ).each(function(i, item) {
                 // "<td><button type='" + item + "-'></td>"
-                var item = parseInt(item);
-                var history = "A -> B -> C"; // App.getItemHistory(item);
-                $("#items-table").append("<tr><td>" + item + "</td><td>" + "owner" + item + "</td><td>" + history + "</td></tr>");
+                var history = histories[i]; // App.getItemHistory(item);
+                var price = prices[i]
+                $("#items-table").append("<tr><td>" + item + "</td><td>" + price + "</td><td>" + owners[i] + "</td><td>" + history + "</td><td><a href='#'>Purchase</a></tr>");
             // $( App.getItemsForSale().split(',') ).each(function(item) {
                 // $("#items-table").append("<tr><td>" + item + "</td><td>" + App.getCurrentOwner(parseInt(item)) + "</td></tr>");
             });
+            }
 
             $("#insert-navbar").load("nav.html");
 
             function displayBalance() {
-                alert("diplaying");
                 var balanceString = "Current Balance: $";
                 var balance = App.viewFunds();
                 // if (parseInt(balance)) {

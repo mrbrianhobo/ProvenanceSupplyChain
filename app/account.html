@@ -18,12 +18,26 @@
 
     <div id="insert-navbar"></div>
 
-    <h2>Manage Funds</h2>
-    <input id="withdraw-input" type="number" placeholder="Withdraw Amount"></input>
-    <button id="withdraw-submit" type="button" class="btn btn-default">Withdraw</button>
+    <div class="container">
+        <h2>Manage Funds</h2>
 
-    <input id="deposit-input" type="number" placeholder="Deposit Amount"></input>
-    <button id="deposit-submit" type="button" class="btn btn-default">Deposit</button>
+        <br>
+        <input style="max-width: 200px" id="withdraw-input" type="number" placeholder="Withdraw Amount"></input>
+        <button id="withdraw-submit" type="button" class="btn btn-default">Withdraw</button>
+
+        <br>
+        <input style="max-width: 200px" id="deposit-input" type="number" placeholder="Deposit Amount"></input>
+        <button id="deposit-submit" type="button" class="btn btn-default">Deposit</button>
+
+        <br>
+        <hr>
+        <h2>My Items <small>&nbsp;<a href="#">Add Item</a></small></h2>
+        <table class="table" id="items-table" style="width:600px">
+            <th>Item</th>
+            <th>Price</th>
+            <th>For Sale</th>
+        </table>
+    </div>
 
 
     <script src="./app.js"></script>
@@ -32,6 +46,13 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+            $( ["Amoxicillin", "Pseudoephedrine", "Esomeprazole Magnesium", "Fluoxetine", "Duloxetine"] ).each(function(i, item) {
+                var price = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input type='text' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>"
+                $("#items-table").append("<tr><td>" + item + "</td><td>" + price + "</td><td><input type='checkbox' name='For Sale' style='width:50px'></input></td></tr>");
+            // $( App.getItemsForSale().split(',') ).each(function(item) {
+                // $("#items-table").append("<tr><td>" + item + "</td><td>" + App.getCurrentOwner(parseInt(item)) + "</td></tr>");
+            });
+
             $("#insert-navbar").load("nav.html");
 
             $('#withdraw-submit').on('click', function(event) {
