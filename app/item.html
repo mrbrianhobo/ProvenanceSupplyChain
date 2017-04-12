@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Supply Chain Item</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div id="insert-navbar"></div>
+
+    <div class="container">
+        <!-- Query for a particular item -->
+        <div id="item-query-section">
+            <form action="/item.html" method="get">
+                <div class="form-group">
+                    <label for="item-id-input">Item ID</label>
+                    <input type="number" class="form-control" id="item-id-input" name="id" placeholder="Enter serial number">
+                </div>
+            </form>
+        </div>
+
+
+        <!-- Display information for a particular item -->
+        <div id="item-info-section">
+        <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Current Owner</th>
+                <th>For Sale?</th>
+                <th>Sale Price</th>
+            </tr>
+            <tr>
+                <td id="item-id-cell">ID</td>
+                <td id="item-name-cell">Name</td>
+                <td id="item-owner-cell">Current Owner</td>
+                <td id="item-sale-cell">For Sale?</td>
+                <td id="item-price-cell">Sale Price</td>
+            </tr>
+        </table>
+
+
+        </div>
+
+
+    </div>
+
+
+    <script src="./app.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
+
+        $(document).ready(function() {
+
+            histories = ["PharmaManu &#x2192 ChemlabsRX &#x2192 Pfizer",
+                         "Bayer &#x2192 XOMA Ltd.",
+                         "Catalent Solutions &#x2192 BioPharma",
+                         "Adams LLC &#x2192 Napo &#x2192 Transcept Labs &#x2192 Otsuka USA",
+                         "Celgene &#x2192 ChemRX &#x2192 XOMA Ltd."];
+            owners = ["Pfizer", "XOMA Ltd.", "BioPharma", "Otsuka USA", "XOMA Ltd."];
+            prices = ["$1500/g", "$19.12/mg", "$45/barrel", "$24.53/pill", "$190/gallon"];
+            for (i = 0; i < 10; i++) {
+            $( ["Amoxicillin", "Pseudoephedrine", "Esomeprazole Magnesium", "Fluoxetine", "Duloxetine"] ).each(function(i, item) {
+                // "<td><button type='" + item + "-'></td>"
+                var history = histories[i]; // App.getItemHistory(item);
+                var price = prices[i]
+                $("#items-table").append("<tr><td>" + item + "</td><td>" + price + "</td><td>" + owners[i] + "</td><td>" + history + "</td><td><a href='#'>Purchase</a></tr>");
+            // $( App.getItemsForSale().split(',') ).each(function(item) {
+                // $("#items-table").append("<tr><td>" + item + "</td><td>" + App.getCurrentOwner(parseInt(item)) + "</td></tr>");
+            });
+            }
+
+            $("#insert-navbar").load("nav.html");
+
+            function displayBalance() {
+                var balanceString = "Current Balance: $";
+                var balance = App.viewFunds();
+                // if (parseInt(balance)) {
+                //     balanceString += balance;
+                // } else {
+                    balanceString += "90";
+                // }
+
+                $("#balance-display").text(balanceString);
+            }
+
+            displayBalance();
+
+            if (getUrlParameter('id') == undefined) {
+                // display item form
+                $("#item-query-section").show();
+                $("#item-info-section").hide();
+            } else {
+                // display a particular item
+                $("#item-query-section").hide();
+                $("#item-info-section").show();
+
+                var id = 5;//parseInt(getUrlParameter('id'));
+                var name = "Sprite";//App.getItemName(id);
+                var owner = "Coca Cola";//App.getCurrentOwner(id);
+                var forSale = "true";//App.getItemForSale(id);
+                var salePrice;
+                if (forSale == "true") {
+                    salePrice = "$10";//App.getSalePrice(id);
+                } else {
+                    salePrice = 0;
+                }
+
+
+                $("#item-id-cell").text(id);
+                $("#item-name-cell").text(name);
+                $("#item-owner-cell").text(owner);
+                $("#item-sale-cell").text(forSale);
+                $("#item-price-cell").text(salePrice);
+
+            }
+
+        });
+
+
+    </script>
+  </body>
+</html>

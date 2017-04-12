@@ -22169,10 +22169,22 @@ module.exports = {
 			"links": {},
 			"address": "0x49440181f05f652bcb36e5e3a9b1894553e0b253",
 			"updated_at": 1490239132373
+		},
+		"1491786509101": {
+			"events": {},
+			"links": {},
+			"address": "0xe43dce604c78b305cda53b3a77f4f2102386bb33",
+			"updated_at": 1491786544763
+		},
+		"1491956422749": {
+			"events": {},
+			"links": {},
+			"address": "0x30931eaaa7a6c49b83c734d0bcd7f0f28306a755",
+			"updated_at": 1491956442704
 		}
 	},
 	"schema_version": "0.0.5",
-	"updated_at": 1490239132373
+	"updated_at": 1491962833196
 };
 
 /***/ }),
@@ -22329,11 +22341,6 @@ window.App = {
     });
   },
 
-  setStatus: function(message) {
-    // var status = document.getElementById("status");
-    // status.innerHTML = message;
-    console.log("Status: " + message);
-  },
 
   joinContract: function(name) {
       var self = this;
@@ -22341,12 +22348,12 @@ window.App = {
       SupplyChain.deployed().then(function(instance) {
           instance.join(name, {from: account});
       }).then(function() {
-          self.setStatus(name + " joined contract successfully.");
+          console.log(name + " joined contract successfully.");
       }).catch(function(e) {
           console.log(e);
-          self.setStatus(name + " failed to join contract.");
       });
   },
+
 
   viewFunds: function() {
       var self = this;
@@ -22354,17 +22361,95 @@ window.App = {
 
       SupplyChain.deployed().then(function(instance) {
           funds = instance.viewFunds({from: account});
-          console.log(funds);
       }).then(function() {
-        //   self.setStatus(name + " joined contract successfully.");
+          console.log(funds);
       }).catch(function(e) {
           console.log(e);
-        //   self.setStatus(name + " failed to join contract.");
       });
 
       return funds;
-  }
+  },
 
+
+  getCurrentOwner: function(serial) {
+      var self = this;
+      var owner;
+
+      SupplyChain.deployed().then(function(instance) {
+          owner = instance.getCurrentOwner(serial, {from: account});
+      }).then(function() {
+          console.log(owner);
+      }).catch(function(e) {
+          console.log(e);
+      });
+
+      return owner;
+  },
+
+
+  getOwnerHistory: function(serial) {
+      var self = this;
+      var history;
+
+      SupplyChain.deployed().then(function(instance) {
+          history = instance.getOwnerHistory(serial, {from: account});
+          console.log(history);
+      }).catch(function(e) {
+          console.log(e);
+      });
+
+      return history;
+  },
+
+
+  deposit: function(amount) {
+      var self = this;
+      var success;
+
+      SupplyChain.deployed().then(function(instance) {
+          success = instance.deposit(amount, {from: account});
+          if (success == "true") {
+              console.log("Deposit successful.");
+          } else {
+              console.log("Deposit failed.");
+          }
+      }).catch(function(e) {
+          console.log(e);
+      });
+
+      return success;
+  },
+
+
+  withdraw: function() {
+      var self = this;
+      var success;
+
+      SupplyChain.deployed().then(function(instance) {
+          success = instance.withdraw({from: account});
+          if (success == "true") {
+              console.log("Withdraw successful.");
+          } else {
+              console.log("Withdraw failed.");
+          }
+      }).catch(function(e) {
+          console.log(e);
+      });
+
+      return success;
+  },
+
+  getItemName: function(id) {
+
+  },
+
+  getItemForSale: function(id) {
+
+  },
+
+  getSalePrice: function(id) {
+
+  },
 
 
 };

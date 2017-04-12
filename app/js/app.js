@@ -42,11 +42,6 @@ window.App = {
     });
   },
 
-  setStatus: function(message) {
-    // var status = document.getElementById("status");
-    // status.innerHTML = message;
-    console.log("Status: " + message);
-  },
 
   joinContract: function(name) {
       var self = this;
@@ -54,12 +49,12 @@ window.App = {
       SupplyChain.deployed().then(function(instance) {
           instance.join(name, {from: account});
       }).then(function() {
-          self.setStatus(name + " joined contract successfully.");
+          console.log(name + " joined contract successfully.");
       }).catch(function(e) {
           console.log(e);
-          self.setStatus(name + " failed to join contract.");
       });
   },
+
 
   viewFunds: function() {
       var self = this;
@@ -67,17 +62,95 @@ window.App = {
 
       SupplyChain.deployed().then(function(instance) {
           funds = instance.viewFunds({from: account});
-          console.log(funds);
       }).then(function() {
-        //   self.setStatus(name + " joined contract successfully.");
+          console.log(funds);
       }).catch(function(e) {
           console.log(e);
-        //   self.setStatus(name + " failed to join contract.");
       });
 
       return funds;
-  }
+  },
 
+
+  getCurrentOwner: function(serial) {
+      var self = this;
+      var owner;
+
+      SupplyChain.deployed().then(function(instance) {
+          owner = instance.getCurrentOwner(serial, {from: account});
+      }).then(function() {
+          console.log(owner);
+      }).catch(function(e) {
+          console.log(e);
+      });
+
+      return owner;
+  },
+
+
+  getOwnerHistory: function(serial) {
+      var self = this;
+      var history;
+
+      SupplyChain.deployed().then(function(instance) {
+          history = instance.getOwnerHistory(serial, {from: account});
+          console.log(history);
+      }).catch(function(e) {
+          console.log(e);
+      });
+
+      return history;
+  },
+
+
+  deposit: function(amount) {
+      var self = this;
+      var success;
+
+      SupplyChain.deployed().then(function(instance) {
+          success = instance.deposit(amount, {from: account});
+          if (success == "true") {
+              console.log("Deposit successful.");
+          } else {
+              console.log("Deposit failed.");
+          }
+      }).catch(function(e) {
+          console.log(e);
+      });
+
+      return success;
+  },
+
+
+  withdraw: function() {
+      var self = this;
+      var success;
+
+      SupplyChain.deployed().then(function(instance) {
+          success = instance.withdraw({from: account});
+          if (success == "true") {
+              console.log("Withdraw successful.");
+          } else {
+              console.log("Withdraw failed.");
+          }
+      }).catch(function(e) {
+          console.log(e);
+      });
+
+      return success;
+  },
+
+  getItemName: function(id) {
+
+  },
+
+  getItemForSale: function(id) {
+
+  },
+
+  getSalePrice: function(id) {
+
+  },
 
 
 };
