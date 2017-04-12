@@ -287,18 +287,13 @@ contract SupplyChain {
         return temp[0];
     }
 
-    function updateOwnedItems(Owner x, uint ident, uint ident2) private{  //updates OwnedItems
+    function updateOwnedItems(Owner x, uint ident, uint ident2) private {  //updates OwnedItems
         Owner o = owners[x.addr]; //Make this nonLocal
         if (o.ownedItems.length <= 0) {
             throw;
         }
-        uint[] temp;
-        for (uint i = 0; i < o.ownedItems.length; i++) {
-            if(o.ownedItems[i] != ident && o.ownedItems[i] != ident2){
-                temp.push(o.ownedItems[i]);
-            }
-        }
-        o.ownedItems = temp;
+        o.ownedItems = remove(o.ownedItems,ident);
+        o.ownedItems = remove(o.ownedItems,ident2);
     }
 
     function updateItems(uint ident) private {  //update itemsForSale
