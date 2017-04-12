@@ -24,11 +24,20 @@ contract SupplyChain {
         string iname;
         address[] ownerHistory; //Can't use mapping because we need an order
         bool forSale; //Does the current owner want to give up the item?
-        Owner currentOwner;
+        address currentOwner;
         uint salePrice;
+        bool active;
+        uint[] parents;
     }
 
     Item[] itemsForSale;
+
+
+    modifier correctOwner() {
+        if(owners[msg.sender].addr != msg.sender) throw;
+        _;
+    }
+
 
     function join(string name) public returns (string) {
         if (owners[msg.sender].addr == msg.sender) {
@@ -40,13 +49,9 @@ contract SupplyChain {
         return "You have joined the contract!";
     }
 
-    function deposit() public payable returns (string) {
+    function deposit() public payable correctOwner returns (string) {
         if (msg.value <= 0) {
             return "That is not a valid deposit.";
-        }
-
-        if (owners[msg.sender].addr != msg.sender) {
-            throw;
         }
 
         uint256 amount = msg.value/1000000000000000000;
@@ -56,17 +61,12 @@ contract SupplyChain {
 
     }
 
-    function viewFunds() public returns (uint256) {
-        if (owners[msg.sender].addr != msg.sender) {
-            throw;
-        }
+    function viewFunds() public correctOwner returns (uint256){
+
         return owners[msg.sender].value;
     }
 
-    function withdraw() public payable returns (string) {
-        if (owners[msg.sender].addr != msg.sender) {
-            throw;
-        }
+    function withdraw() public payable correctOwner returns (string) {
 
         if (!msg.sender.send(owners[msg.sender].value)) {
             throw;
@@ -76,7 +76,7 @@ contract SupplyChain {
         return "You have withdrawn all your funds from the contract";
     }
 
-    function addItem(uint serial, string n) public returns (string) { //As of now there is no buy in or payment for getting in. Only cost is gas.
+    function addNewItem(uint serial, string n) public returns (string) { //As of now there is no buy in or payment for getting in. Only cost is gas.
         if (items[serial].identification == serial) {
             return "Item already exists. Try again";
         }
@@ -87,7 +87,7 @@ contract SupplyChain {
         }
 
         first.ownedItems.push(serial);
-        items[serial] = Item(serial, n, new address[](0), false, first, 2**256 - 1); //Add item into mapping
+        items[serial] = Item(serial, n, new address[](0), false, first.addr, 2**256 - 1, true, new uint[](0)); //Add item into mapping
         items[serial].ownerHistory.push(msg.sender); //adds owner of item as first owner
         numItems++; //Increment number of items
 
@@ -95,6 +95,61 @@ contract SupplyChain {
 
         return "You have successfully added an item: ".toSlice().concat(n.toSlice());
     }
+
+    //Insert "recipe" based items and make sure you own the items
+
+    function createNewSoda(uint serial, string n) public returns (string) {
+        // Requires sugar 12345 and water 13579
+        if (items[serial].identification == serial) {
+            return "Item already exists. Try again";
+        }
+
+        Owner first = owners[msg.sender];
+        if (first.addr != msg.sender) {
+            return "You are not a valid owner";
+        }
+        uint hasSugar = 2**256 - 1;
+        uint hasWater = 2**256 - 1;
+        for(uint i = 0; i < first.ownedItems.length; i++){
+            if(hasSugar == 2**256 - 1 && items[first.ownedItems[i]].iname.toSlice().equals("Sugar".toSlice()) && !items[first.ownedItems[i]].forSale){
+                hasSugar = i;
+            }
+            if(hasWater == 2**256 - 1 && items[first.ownedItems[i]].iname.toSlice().equals("Water".toSlice()) && !items[first.ownedItems[i]].forSale){
+                hasWater = i;
+            }
+
+        }
+        if(hasSugar == 2**256 - 1 || hasWater == 2**256 - 1){
+            return "You do not own the ingredients";
+        }
+        
+
+        items[first.ownedItems[hasSugar]].currentOwner = 0;
+        items[first.ownedItems[hasSugar]].active = false;
+        items[first.ownedItems[hasSugar]].currentOwner = 0;
+        items[first.ownedItems[hasWater]].active = false;
+        
+        uint[] parent;
+        parent.push(first.ownedItems[hasSugar]);
+        parent.push(first.ownedItems[hasWater]);
+        
+        updateOwnedItems(first, first.ownedItems[hasSugar], first.ownedItems[hasWater]); 
+
+        
+
+        first.ownedItems.push(serial);
+        
+        items[serial] = Item(serial, n, new address[](0), false, first.addr, 2**256 - 1, true, parent); //Add item into mapping
+        items[serial].ownerHistory.push(msg.sender); //adds owner of item as first owner
+        numItems++; //Increment number of items
+
+        
+
+        return "You have successfully added an item: ".toSlice().concat(n.toSlice());
+
+    }
+
+
 
 
     function markForSale(uint serial, uint price) public returns (string) {
@@ -104,7 +159,7 @@ contract SupplyChain {
             return "There is no such item";
         }
 
-        if (msg.sender != i.currentOwner.addr) {
+        if (msg.sender != i.currentOwner) {
             return "This is not your item";
         }
 
@@ -143,7 +198,7 @@ contract SupplyChain {
             return "There is no such item";
         }
 
-        if (msg.sender != i.currentOwner.addr) {
+        if (msg.sender != i.currentOwner) {
             return "This is not your item";
         }
 
@@ -184,22 +239,27 @@ contract SupplyChain {
         if (items[serial].identification != serial) {
             return "There is no such item";
         }
-        if (i.currentOwner.addr == msg.sender) {
+        if (i.currentOwner == msg.sender) {
             return "You can't buy your own item.";
         }
+
+        if(!items[serial].active){
+            return "This item is inactive";
+        }
+
         if (i.forSale) {
             Owner newOwner = owners[msg.sender];
             if (newOwner.value < i.salePrice) {
                 return "You don't have enough money";
             }
             newOwner.value -= i.salePrice;
-            Owner curr = owners[i.currentOwner.addr];
+            Owner curr = owners[i.currentOwner];
             curr.value += i.salePrice;
             
             curr.ownedItems = remove(curr.ownedItems,serial); //Remove the item from the previous owners owner's list
             newOwner.ownedItems.push(i.identification);
             i.ownerHistory.push(msg.sender);
-            i.currentOwner = newOwner;
+            i.currentOwner = newOwner.addr;
             i.forSale = false;
 
             updateItems(i.identification);
@@ -227,13 +287,14 @@ contract SupplyChain {
         return temp[0];
     }
 
-    function updateOwnedItems(Owner o, uint ident) private {  //updates OwnedItems
+    function updateOwnedItems(Owner x, uint ident, uint ident2) private{  //updates OwnedItems
+        Owner o = owners[x.addr]; //Make this nonLocal
         if (o.ownedItems.length <= 0) {
             throw;
         }
         uint[] temp;
         for (uint i = 0; i < o.ownedItems.length; i++) {
-            if(o.ownedItems[i] == ident){
+            if(o.ownedItems[i] != ident && o.ownedItems[i] != ident2){
                 temp.push(o.ownedItems[i]);
             }
         }
@@ -308,12 +369,35 @@ contract SupplyChain {
     }
 
     function getCurrentOwner(uint serial) public returns (string){
+        if(items[serial].identification != serial) throw;
         if(items[serial].identification != serial){
             return "That is not a valid item";
         }
-        return items[serial].currentOwner.name;
+        if(!items[serial].active){
+            return "This item is inactive";
+        }
+
+        return owners[items[serial].currentOwner].name;
     }
 
+    function getItemName(uint serial) public returns (string){
+        if(items[serial].identification != serial) throw;
+        return items[serial].iname;
+    }
+
+    function getIsItemForSale(uint serial) public returns (bool){
+        if(items[serial].identification != serial) throw;
+        // if(items[serial].forSale){
+        //     return "True";
+        // }
+        return items[serial].forSale;
+    }
+
+    function getIsActive(uint serial) public returns (bool){
+        if(items[serial].identification != serial) throw;
+        
+        return items[serial].active;
+    }
 
 
     function uintToString(uint v) private constant returns (string) {
@@ -341,4 +425,4 @@ contract SupplyChain {
         return string(bytesString);
     } 
 
-}
+}   
