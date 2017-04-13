@@ -130,8 +130,11 @@ contract SupplyChain {
         items[first.ownedItems[hasWater]].active = false;
         
         uint[] parent;
-        parent.push(first.ownedItems[hasSugar]);
-        parent.push(first.ownedItems[hasWater]);
+        // parent.push(first.ownedItems[hasSugar]);
+        // parent.push(first.ownedItems[hasWater]);
+
+        uint sugarID = first.ownedItems[hasSugar];
+        uint waterID = first.ownedItems[hasWater];
         
         updateOwnedItems(first, first.ownedItems[hasSugar], first.ownedItems[hasWater]); 
 
@@ -142,6 +145,9 @@ contract SupplyChain {
         items[serial] = Item(serial, n, new address[](0), false, first.addr, 2**256 - 1, true, parent); //Add item into mapping
         items[serial].ownerHistory.push(msg.sender); //adds owner of item as first owner
         numItems++; //Increment number of items
+
+        items[serial].parents.push(sugarID);
+        items[serial].parents.push(waterID);
 
         
 
@@ -365,9 +371,6 @@ contract SupplyChain {
 
     function getCurrentOwner(uint serial) public returns (string){
         if(items[serial].identification != serial) throw;
-        if(items[serial].identification != serial){
-            return "That is not a valid item";
-        }
         if(!items[serial].active){
             return "This item is inactive";
         }
@@ -388,10 +391,27 @@ contract SupplyChain {
         return items[serial].forSale;
     }
 
+    function getSalePrice(uint serial) public returns(uint){
+        if(items[serial].identification != serial) throw;
+        Item temp = items[serial];
+        if(!temp.forSale){
+            return 0;
+        }
+        return temp.salePrice;
+    }
+
     function getIsActive(uint serial) public returns (bool){
         if(items[serial].identification != serial) throw;
         
         return items[serial].active;
+    }
+
+    function isValidItem(uint serial) public returns (bool){
+        if (items[serial].identification != serial){
+            return false;
+        }
+        return true;
+
     }
 
 

@@ -152,6 +152,16 @@ window.App = {
 
   },
 
+  getIsActive: function(id) {
+
+
+  },
+
+  isValidItem: function(id) {
+
+
+  },
+
 
 };
 
