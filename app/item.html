@@ -39,6 +39,7 @@
                 <th>Current Owner</th>
                 <th>For Sale?</th>
                 <th>Sale Price</th>
+                <th>Active?</th>
             </tr>
             <tr>
                 <td id="item-id-cell">ID</td>
@@ -46,6 +47,8 @@
                 <td id="item-owner-cell">Current Owner</td>
                 <td id="item-sale-cell">For Sale?</td>
                 <td id="item-price-cell">Sale Price</td>
+                <td id="item-status-cell">Active?</td>
+
             </tr>
         </table>
 
@@ -121,23 +124,32 @@
                 $("#item-query-section").hide();
                 $("#item-info-section").show();
 
-                var id = 5;//parseInt(getUrlParameter('id'));
-                var name = "Sprite";//App.getItemName(id);
-                var owner = "Coca Cola";//App.getCurrentOwner(id);
-                var forSale = "true";//App.getItemForSale(id);
-                var salePrice;
-                if (forSale == "true") {
-                    salePrice = "$10";//App.getSalePrice(id);
-                } else {
-                    salePrice = 0;
+                var id = parseInt(getUrlParameter('id'));
+                if(!App.isValidItem(id)){
+                    $("#item-id-cell").text(id);
+                    $("#item-name-cell").text("*No Such Item*");
                 }
+                else {
+                    var name = "Sprite";//App.getItemName(id);
+                    var owner = "Coca Cola";//App.getCurrentOwner(id);
+                    var forSale = "true";//App.getIsItemForSale(id);
+                    var salePrice;
+                    var status; //App.getIsActive(id);
+
+                    if (forSale == "true") {
+                        salePrice = "$10";//App.getSalePrice(id);
+                    } else {
+                        salePrice = 0;
+                    }
 
 
-                $("#item-id-cell").text(id);
-                $("#item-name-cell").text(name);
-                $("#item-owner-cell").text(owner);
-                $("#item-sale-cell").text(forSale);
-                $("#item-price-cell").text(salePrice);
+                    $("#item-id-cell").text(id);
+                    $("#item-name-cell").text(name);
+                    $("#item-owner-cell").text(owner);
+                    $("#item-sale-cell").text(forSale);
+                    $("#item-price-cell").text(salePrice);
+                    $("#item-status-cell").text(status);
+                }
 
             }
 
