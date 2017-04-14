@@ -306,14 +306,14 @@ contract SupplyChain {
         if (itemsForSale.length <= 0 ) {
             throw;
         }
-        uint[] temp;
+        // uint[] temp;
 
-        for (uint i = 0; i < itemsForSale.length; i++) {
-            if(itemsForSale[i] != ident){
-                temp.push(itemsForSale[i]);
-            }
-        }
-        itemsForSale = temp;
+        // for (uint i = 0; i < itemsForSale.length; i++) {
+        //     if(itemsForSale[i] != ident){
+        //         temp.push(itemsForSale[i]);
+        //     }
+        // }
+        // itemsForSale = temp;
     }
 
     // function getOwnedItems() public returns (string) {
