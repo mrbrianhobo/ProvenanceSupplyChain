@@ -33,7 +33,8 @@
         <hr>
         <h2>My Items <small>&nbsp;<a href="#">Add Item</a></small></h2>
         <table class="table" id="items-table" style="width:600px">
-            <th>Item</th>
+            <th>ID</th>
+            <th>Name</th>
             <th>Price</th>
             <th>For Sale</th>
         </table>
@@ -41,19 +42,27 @@
 
 
     <script src="./app.js"></script>
+    <script src="./global.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript">
 
+        var displayBalance = function() {
+            var balanceString = "Current Balance: $";
+            var balance = App.viewFunds();
+            if (parseInt(balance)) {
+                balanceString += balance;
+            } else {
+                balanceString += "0";
+            }
+
+            $("#balance-display").text(balanceString);
+        }
+
         $(document).ready(function() {
-            $( ["Amoxicillin", "Pseudoephedrine", "Esomeprazole Magnesium", "Fluoxetine", "Duloxetine"] ).each(function(i, item) {
-                var price = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input type='text' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>"
-                $("#items-table").append("<tr><td>" + item + "</td><td>" + price + "</td><td><input type='checkbox' name='For Sale' style='width:50px'></input></td></tr>");
-            // $( App.getItemsForSale().split(',') ).each(function(item) {
-                // $("#items-table").append("<tr><td>" + item + "</td><td>" + App.getCurrentOwner(parseInt(item)) + "</td></tr>");
-            });
 
             $("#insert-navbar").load("nav.html");
+            displayBalance();
 
             $('#withdraw-submit').on('click', function(event) {
                 App.withdraw(parseInt($('#withdraw-input').val()));
@@ -61,6 +70,22 @@
 
             $('#deposit-submit').on('click', function(event) {
                 App.deposit(parseInt($('#deposit-input').val()));
+            });
+
+            // $( ["Amoxicillin", "Pseudoephedrine", "Esomeprazole Magnesium", "Fluoxetine", "Duloxetine"] ).each(function(i, item) {
+            //     var price = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input type='text' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>"
+            //     $("#items-table").append("<tr><td>" + item + "</td><td>" + price + "</td><td><input type='checkbox' name='For Sale' style='width:50px'></input></td></tr>");
+            $( App.getItemsForSale().split(',') ).each(function(id) {
+                var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
+                var name    = App.getItemName(parseInt(id));
+                var price   = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input type='text' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>";
+                var mark    = "<input type='checkbox' name='For Sale' style='width:50px'></input>";
+                $("#items-table").append("<tr>" +
+                                             "<td>" + itemStr + "</td>" +
+                                             "<td>" + name    + "</td>" +
+                                             "<td>" + price   + "</td>" +
+                                             "<td>" + mark    + "</td>" +
+                                         "</tr>");
             });
 
         });

@@ -21,7 +21,8 @@
     <div class="container">
         <h2>Items For Sale</h2>
         <table class="table" id="items-table">
-            <th>Item</th>
+            <th>ID</th>
+            <th>Name</th>
             <th>Price</th>
             <th>Owner</th>
         </table>
@@ -29,13 +30,27 @@
 
 
     <script src="./app.js"></script>
+    <script src="./global.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript">
 
+        var displayBalance = function() {
+            var balanceString = "Current Balance: $";
+            var balance = App.viewFunds();
+            if (parseInt(balance)) {
+                balanceString += balance;
+            } else {
+                balanceString += "0";
+            }
+
+            $("#balance-display").text(balanceString);
+        }
+
         $(document).ready(function() {
 
             $("#insert-navbar").load("nav.html");
+            displayBalance();
 
             // histories = ["PharmaManu &#x2192 ChemlabsRX &#x2192 Pfizer",
             //              "Bayer &#x2192 XOMA Ltd.",
@@ -52,29 +67,16 @@
             // }
 
 
-            function displayBalance() {
-                var balanceString = "Current Balance: $";
-                var balance = App.viewFunds();
-                // if (parseInt(balance)) {
-                //     balanceString += balance;
-                // } else {
-                    balanceString += "90";
-                // }
-
-                $("#balance-display").text(balanceString);
-            }
-
-            displayBalance();
-
-
-            $( App.getItemsForSale().split(',') ).each(function(item) {
-                var itemStr = "<a href='#'>" + itemStr + "</a>"
-                var price = App.getSalePrice(parseInt(item));
-                var owner = App.getCurrentOwner(parseInt(item));
+            $( App.getItemsForSale().split(',') ).each(function(id) {
+                var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
+                var name    = App.getItemName(parseInt(id));
+                var price   = App.getSalePrice(parseInt(id));
+                var owner   = App.getCurrentOwner(parseInt(id));
                 $("#items-table").append("<tr>" +
-                                            "<td>" + itemStr + "</td>" +
-                                            "<td>" + price + "</td>" +
-                                            "<td>" + owner + "</td>" +
+                                            "<td>" + idStr   + "</td>" +
+                                            "<td>" + name    + "</td>" +
+                                            "<td>" + price   + "</td>" +
+                                            "<td>" + owner   + "</td>" +
                                         "</tr>");
             });
 
