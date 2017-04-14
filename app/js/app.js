@@ -144,7 +144,12 @@ window.App = {
 
   },
 
-  getItemForSale: function(id) {
+  getItemForSale: function() {
+
+  },
+
+
+  getOwnedItems: function(id) {
 
   },
 

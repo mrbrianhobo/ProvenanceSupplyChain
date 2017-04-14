@@ -22443,11 +22443,26 @@ window.App = {
 
   },
 
-  getItemForSale: function(id) {
+  getItemForSale: function() {
+
+  },
+
+
+  getOwnedItems: function(id) {
 
   },
 
   getSalePrice: function(id) {
+
+  },
+
+  getIsActive: function(id) {
+
+
+  },
+
+  isValidItem: function(id) {
+
 
   },
 
