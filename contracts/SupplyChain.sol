@@ -41,12 +41,12 @@ contract SupplyChain {
 
     function join(string name) public returns (string) {
         if (owners[msg.sender].addr == msg.sender) {
-            return "false";
+            return "You can't join again";
         }
         uint[] memory temp;
         owners[msg.sender] = Owner(msg.sender, name, temp, 0); //Add owner into mapping
         numOwners++;
-        return "true";
+        return "You have joined the contract!";
     }
 
     function deposit() public payable correctOwner returns (string) {
@@ -278,19 +278,20 @@ contract SupplyChain {
     }
 
     function remove(uint[] array, uint val) private returns (uint[]) {
-        uint[][1] memory temp;
-        
         for (uint i = 0; i < array.length; i++) {
             if (array[i] == val) {
                 delete array[i];
                 for (uint j = i; j < array.length - 1; j++) {
                     array[j] = array[j + 1];
                 }
-                temp[0] = array;
-                //temp[0].length -= 1;
             }
         }
-        return temp[0];
+        
+        uint[] memory temp = new uint[](array.length - 1);
+        for (uint k; k < array.length - 1; k++) {
+            temp[k] = array[k];
+        }
+        return temp;
     }
 
     function updateOwnedItems(Owner x, uint ident, uint ident2) private {  //updates OwnedItems
@@ -306,6 +307,7 @@ contract SupplyChain {
         if (itemsForSale.length <= 0 ) {
             throw;
         }
+        itemsForSale = remove(itemsForSale, ident);
         // uint[] temp;
 
         // for (uint i = 0; i < itemsForSale.length; i++) {
