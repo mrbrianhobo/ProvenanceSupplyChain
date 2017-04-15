@@ -3,13 +3,13 @@ import "../stylesheets/app.css";
 
 // Import libraries we need.
 import { default as Web3} from 'web3';
-import { default as contract } from 'truffle-contract'
+import { default as contract } from 'truffle-contract';
 // import {EthereumClient, smartContract} from '../../SmartContractSetup.js';
-// //Call Functions as smartcontract.function() for constant. add constant
-// //smartcontract.fucntion.sendTransaction(parameters,  {from: EthereumClient.eth.accounts[0], gas:100000})
+//Call Functions as smartcontract.function() for constant. add constant
+//smartcontract.fucntion.sendTransaction(parameters,  {from: EthereumClient.eth.accounts[0], gas:100000})
 
 // Import our contract artifacts and turn them into usable abstractions.
-import supplyChain_artifacts from '../../build/contracts/SupplyChain.json'
+import supplyChain_artifacts from '../../build/contracts/SupplyChain.json';
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 var SupplyChain = contract(supplyChain_artifacts);
@@ -25,7 +25,7 @@ window.App = {
     var self = this;
 
     // Bootstrap the MetaCoin abstraction for Use.
-    SupplyChain.setProvider(web3.currentProvider);
+    SupplyChain.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function(err, accs) {
@@ -52,11 +52,12 @@ window.App = {
   // },
 
   joinContract: function(name) {
-    console.log(SupplyChain);
     var self = this;
       SupplyChain.deployed().then(function(instance) {
+        console.log("test");
+        instance.join(name, {from: account});
 
-        instance.join(name, {from:account});
+        // smartContract.join.sendTransaction(name, {from: EthereumClient.eth.accounts[0], gas:100000});
 
       }).then(function() {
           console.log(name + " joined contract successfully.");
@@ -179,7 +180,7 @@ window.App = {
 
   addItem: function(id, name){
 
-    return smartcontract.addNewItem.sendTransaction(id, name,  {from: EthereumClient.eth.accounts[0], gas:100000});
+    return smartcontract.addNewItem.sendTransaction(id, name,  {from: account});
   },
 
   
