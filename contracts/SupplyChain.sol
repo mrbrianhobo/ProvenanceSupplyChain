@@ -361,30 +361,45 @@ contract SupplyChain {
     }
 
     function getOwnedItemsArray() public correctOwner returns(uint[]){
-         if (owners[msg.sender].addr == msg.sender) { 
 
-            return owners[msg.sender].ownedItems;
+        return owners[msg.sender].ownedItems;
 
+    }
+
+    function getItemParents(uint serial) public returns(uint[]){
+        if(items[serial].identification != serial){
+            throw;
         }
+
+        return items[serial].parents;
     }
     
 
-    function getOwnerHistory(uint serial) public returns (string) {
+    // function getOwnerHistory(uint serial) public returns (string) {
+    //     if (items[serial].identification != serial) {
+    //         return "There is no such item";
+    //     }
+
+    //     string memory temp;
+    //     for (uint i = 0; i < items[serial].ownerHistory.length; i++) {
+    //         temp = temp.toSlice().concat(owners[items[serial].ownerHistory[i]].name.toSlice());
+    //         if (i < items[serial].ownerHistory.length - 1) {
+    //             temp = temp.toSlice().concat(" -> ".toSlice());
+    //         }
+    //     }
+    //     return temp;
+    // }
+
+
+    function getOwnerHistoryArray(uint serial) public constant returns (address[]) {
         if (items[serial].identification != serial) {
-            return "There is no such item";
+            throw;
         }
 
-        string memory temp;
-        for (uint i = 0; i < items[serial].ownerHistory.length; i++) {
-            temp = temp.toSlice().concat(owners[items[serial].ownerHistory[i]].name.toSlice());
-            if (i < items[serial].ownerHistory.length - 1) {
-                temp = temp.toSlice().concat(" -> ".toSlice());
-            }
-        }
-        return temp;
+        return items[serial].ownerHistory;
     }
 
-    function getCurrentOwner(uint serial) public returns (string){
+    function getCurrentOwner(uint serial) public constant returns (string){
         if(items[serial].identification != serial) throw;
         if(!items[serial].active){
             return "This item is inactive";
@@ -393,12 +408,12 @@ contract SupplyChain {
         return owners[items[serial].currentOwner].name;
     }
 
-    function getItemName(uint serial) public returns (string){
+    function getItemName(uint serial) public constant returns (string){
         if(items[serial].identification != serial) throw;
         return items[serial].iname;
     }
 
-    function getIsItemForSale(uint serial) public returns (bool){
+    function getIsItemForSale(uint serial) public constant returns (bool){
         if(items[serial].identification != serial) throw;
         // if(items[serial].forSale){
         //     return "True";
@@ -406,7 +421,7 @@ contract SupplyChain {
         return items[serial].forSale;
     }
 
-    function getSalePrice(uint serial) public returns(uint){
+    function getSalePrice(uint serial) public constant returns(uint){
         if(items[serial].identification != serial) throw;
         Item temp = items[serial];
         if(!temp.forSale){
@@ -415,13 +430,13 @@ contract SupplyChain {
         return temp.salePrice;
     }
 
-    function getIsActive(uint serial) public returns (bool){
+    function getIsActive(uint serial) public constant returns (bool){
         if(items[serial].identification != serial) throw;
         
         return items[serial].active;
     }
 
-    function isValidItem(uint serial) public returns (bool){
+    function isValidItem(uint serial) public constant returns (bool){
         if (items[serial].identification != serial){
             return false;
         }
