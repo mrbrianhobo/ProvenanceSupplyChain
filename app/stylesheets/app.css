@@ -1,14 +1,8 @@
 body {
-  /*margin-left: 25%;
-  margin-right: 25%;*/
-  /*margin-top: 10%;*/
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-top: 10%;
   font-family: "Open Sans", sans-serif;
-}
-
-body#index {
-    margin-left: 25%;
-    margin-right: 25%;
-    margin-top: 10%;
 }
 
 label {
@@ -55,8 +49,4 @@ h3 {
 
 .hint {
   color: #666;
-}
-
-th {
-    background-color: #eeeeee;
 }

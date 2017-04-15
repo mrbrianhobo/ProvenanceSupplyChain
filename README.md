@@ -1,14 +1,29 @@
-# ProvenanceSupplyChain
-SupplyChain Framework written in Solidity.
+# truffle-init-webpack
+Example webpack project with Truffle. Includes contracts, migrations, tests, user interface and webpack build pipeline.
 
-## Features ##
- * Depositing/Withdrawing ether into the contract
- * Adding items into the contract
- * Selling items to peers in the contract
- * Tracking owner history of items
+## Usage
 
-## Additional Information ##
-This contract is the general framework for a blockchain based supply chain management. The purpose of this contract is to provide a proof-of-concept for logging items and transactions at an industry level. We are using blockchain technology because it provides trust, automation, security, and assist in acounting services.  
+To initialize a project with this exapmple, run `truffle init webpack` inside an empty directory.
 
-## About us ##
-We are members of the Provenance team within Blockchain at Berkeley.
+## Building and the frontend
+
+1. First run `truffle compile`, then run `truffle migrate` to deploy the contracts onto your network of choice (default "development").
+1. Then run `npm run dev` to build the app and serve it on http://localhost:8080
+
+## Possible upgrades
+
+* Use the webpack hotloader to sense when contracts or javascript have been recompiled and rebuild the application. Contributions welcome!
+
+## Common Errors
+
+* **Error: Can't resolve '../build/contracts/MetaCoin.json'**
+
+This means you haven't compiled or migrated your contracts yet. Run `truffle compile` and `truffle migrate` first.
+
+Full error:
+
+```
+ERROR in ./app/main.js
+Module not found: Error: Can't resolve '../build/contracts/MetaCoin.json' in '/Users/tim/Documents/workspace/Consensys/test3/app'
+ @ ./app/main.js 11:16-59
+```

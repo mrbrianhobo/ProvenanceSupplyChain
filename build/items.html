@@ -30,7 +30,6 @@
 
 
     <script src="./app.js"></script>
-    <script src="./global.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript">
@@ -67,18 +66,18 @@
             // }
 
 
-            $( App.getItemsForSale().split(',') ).each(function(id) {
-                var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
-                var name    = App.getItemName(parseInt(id));
-                var price   = App.getSalePrice(parseInt(id));
-                var owner   = App.getCurrentOwner(parseInt(id));
-                $("#items-table").append("<tr>" +
-                                            "<td>" + idStr   + "</td>" +
-                                            "<td>" + name    + "</td>" +
-                                            "<td>" + price   + "</td>" +
-                                            "<td>" + owner   + "</td>" +
-                                        "</tr>");
-            });
+            // $( App.getItemsForSale().split(',') ).each(function(id) {
+            //     var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
+            //     var name    = App.getItemName(parseInt(id));
+            //     var price   = App.getSalePrice(parseInt(id));
+            //     var owner   = App.getCurrentOwner(parseInt(id));
+            //     $("#items-table").append("<tr>" +
+            //                                 "<td>" + idStr   + "</td>" +
+            //                                 "<td>" + name    + "</td>" +
+            //                                 "<td>" + price   + "</td>" +
+            //                                 "<td>" + owner   + "</td>" +
+            //                             "</tr>");
+            // });
 
         });
 

@@ -4,12 +4,15 @@ import "../stylesheets/app.css";
 // Import libraries we need.
 import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract'
+// import {EthereumClient, smartContract} from '../../SmartContractSetup.js';
+// //Call Functions as smartcontract.function() for constant. add constant
+// //smartcontract.fucntion.sendTransaction(parameters,  {from: EthereumClient.eth.accounts[0], gas:100000})
 
 // Import our contract artifacts and turn them into usable abstractions.
-import supply_chain_artifacts from '../../build/contracts/SupplyChain.json'
+import supplyChain_artifacts from '../../build/contracts/SupplyChain.json'
 
-// SupplyChain is our usable abstraction, which we'll use through the code below.
-var SupplyChain = contract(supply_chain_artifacts);
+// MetaCoin is our usable abstraction, which we'll use through the code below.
+var SupplyChain = contract(supplyChain_artifacts);
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -21,7 +24,7 @@ window.App = {
   start: function() {
     var self = this;
 
-    // Bootstrap the SupplyChain abstraction for Use.
+    // Bootstrap the MetaCoin abstraction for Use.
     SupplyChain.setProvider(web3.currentProvider);
 
     // Get the initial account balance so it can be displayed.
@@ -39,22 +42,29 @@ window.App = {
       accounts = accs;
       account = accounts[0];
 
+      // self.refreshBalance();
     });
   },
 
+  // setStatus: function(message) {
+  //   var status = document.getElementById("status");
+  //   status.innerHTML = message;
+  // },
 
   joinContract: function(name) {
-      var self = this;
-
+    console.log(SupplyChain);
+    var self = this;
       SupplyChain.deployed().then(function(instance) {
-          instance.join(name, {from: account});
+
+        instance.join(name, {from:account});
+
       }).then(function() {
           console.log(name + " joined contract successfully.");
       }).catch(function(e) {
           console.log(e);
       });
-  },
 
+  },
 
   viewFunds: function() {
       var self = this;
@@ -84,7 +94,7 @@ window.App = {
           console.log(e);
       });
 
-      return owner;
+      return smartContract.getCurrentOwner(id);
   },
 
 
@@ -93,7 +103,7 @@ window.App = {
       var history;
 
       SupplyChain.deployed().then(function(instance) {
-          history = instance.getOwnerHistory(serial, {from: account});
+          history = instance.getOwnerHistoryArray(serial, {from: account});
           console.log(history);
       }).catch(function(e) {
           console.log(e);
@@ -144,7 +154,7 @@ window.App = {
 
   },
 
-  getItemForSale: function() {
+  getItemsForSale: function() {
 
   },
 
@@ -154,7 +164,7 @@ window.App = {
   },
 
   getSalePrice: function(id) {
-
+    return 10;
   },
 
   getIsActive: function(id) {
@@ -164,16 +174,21 @@ window.App = {
 
   isValidItem: function(id) {
 
-
+    return smartContract.isValidItem(id);
   },
 
+  addItem: function(id, name){
 
+    return smartcontract.addNewItem.sendTransaction(id, name,  {from: EthereumClient.eth.accounts[0], gas:100000});
+  },
+
+  
 };
 
 window.addEventListener('load', function() {
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
-    console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 SupplyChain, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
+    console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 MetaCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider);
   } else {

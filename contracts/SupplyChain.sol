@@ -41,12 +41,12 @@ contract SupplyChain {
 
     function join(string name) public returns (string) {
         if (owners[msg.sender].addr == msg.sender) {
-            return "You can't join again";
+            return "false";
         }
         uint[] memory temp;
         owners[msg.sender] = Owner(msg.sender, name, temp, 0); //Add owner into mapping
         numOwners++;
-        return "You have joined the contract!";
+        return "true";
     }
 
     function deposit() public payable correctOwner returns (string) {

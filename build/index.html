@@ -32,7 +32,7 @@
             // $("#insert-navbar").load("nav.html");
 
             $('#join-submit').on('click', function(event) {
-                App.joinContract($('#join-input').val());
+                var x = App.joinContract($('#join-input').val());
                 window.location = "items.html";
             });
 
