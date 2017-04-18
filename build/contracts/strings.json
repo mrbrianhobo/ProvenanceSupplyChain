@@ -1,7 +1,7 @@
 {
   "contract_name": "strings",
   "abi": [],
-  "unlinked_binary": "0x6060604052346000575b60358060166000396000f30060606040525b60005600a165627a7a723058201eada066a92832b6151689c15ab9cd9dc0a7a5d02286f1df615e76db6bba5efd0029",
+  "unlinked_binary": "0x6060604052346000575b60358060166000396000f30060606040525b60005600a165627a7a7230582024fe9a967fe23945a4c302c365cad1c406b2dd49c26723f653e65b1a07d247050029",
   "networks": {
     "1492286570913": {
       "events": {},
@@ -68,8 +68,32 @@
       "links": {},
       "address": "0xd4a72fc4e9f76da51438e3f3e490c1d7d894305a",
       "updated_at": 1492298047012
+    },
+    "1492304339601": {
+      "events": {},
+      "links": {},
+      "address": "0xada59eaf013dcdd4e31c52fe000d9be475b87c24",
+      "updated_at": 1492304378081
+    },
+    "1492304726182": {
+      "events": {},
+      "links": {},
+      "address": "0xd30ad2c30999976487a91395da195c7703d9d5b4",
+      "updated_at": 1492304734826
+    },
+    "1492305176437": {
+      "events": {},
+      "links": {},
+      "address": "0x1e0191bac16d3349489496da4e11c43e41e31895",
+      "updated_at": 1492305194143
+    },
+    "1492557425106": {
+      "events": {},
+      "links": {},
+      "address": "0xa5119af87eb0bff301988b44260849526039d9bb",
+      "updated_at": 1492557437914
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1492298047012
+  "updated_at": 1492558805689
 }

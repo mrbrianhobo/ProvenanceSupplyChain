@@ -152,35 +152,172 @@ window.App = {
   },
 
   getItemName: function(id) {
+    var self = this;
+    var name;
+    SupplyChain.deployed().then(function(instance) {
+        name = instance.getItemName(id);
+
+        if (name != null) {
+            console.log(name);
+        } else {
+            console.log("No such item.");
+        }
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return name;
 
   },
 
   getItemsForSale: function() {
+    var self = this;
+    var saleArray;
+    SupplyChain.deployed().then(function(instance) {
+        saleArray = instance.getItemForSaleArray();
 
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return saleArray; //array of uints
   },
 
 
-  getOwnedItems: function(id) {
+  getOwnedItems: function() {
+    var self = this;
+    var ownedItems;
+    SupplyChain.deployed().then(function(instance) {
+        ownedItems = instance.getOwnedItemsArray();
+
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return ownedItems; //array of uints
 
   },
 
   getSalePrice: function(id) {
-    return 10;
+    var self = this;
+    var salePrice;
+    SupplyChain.deployed().then(function(instance) {
+        ownedItems = instance.getSalePrice(id);
+
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return ownedItems;  //int
+    
   },
 
   getIsActive: function(id) {
+    var self = this;
+    var active;
+    SupplyChain.deployed().then(function(instance) {
+        active = instance.getIsActive(id);
 
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return active; //boolean
+
+  },
+
+  getItemParents: function(id) {
+    var self = this;
+    var parents;
+    SupplyChain.deployed().then(function(instance) {
+        parents = instance.getItemParents(id);
+
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return parents; //array of uints
 
   },
 
   isValidItem: function(id) {
+    var self = this;
+    var valid;
+    SupplyChain.deployed().then(function(instance) {
+        valid = instance.isValidItem(id);
 
-    return smartContract.isValidItem(id);
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return valid; //boolean
   },
 
   addItem: function(id, name){
+    var self = this;
+    var added;
+    SupplyChain.deployed().then(function(instance) {
+        added = instance.addNewItem(id, name, {from: account});
 
-    return smartcontract.addNewItem.sendTransaction(id, name,  {from: account});
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return added; //Return an alert
+    
+  },
+
+  addSoda: function(id, name){
+    var self = this;
+    var added;
+    SupplyChain.deployed().then(function(instance) {
+        added = instance.createNewSoda(id, name, {from: account});
+
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return added; //Return an alert
+    
+  },
+
+  purchaseItem: function(id){
+    var self = this;
+    var purchase;
+    SupplyChain.deployed().then(function(instance) {
+        added = instance.purchase(id, {from: account});
+
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return added; //return an alert
+  },
+
+  markForSale: function(id, value){
+    var self = this;
+    var sale;
+    SupplyChain.deployed().then(function(instance) {
+        sale = instance.markForSale(id, value, {from: account});
+
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return sale; //return an alert
+  },
+
+  undoForSale: function(id){
+    var self = this;
+    var undo;
+    SupplyChain.deployed().then(function(instance) {
+        undo = instance.undoForSale(id, {from: account});
+
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+    return undo; //return an alert
   },
 
   

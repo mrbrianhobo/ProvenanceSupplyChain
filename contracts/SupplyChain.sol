@@ -357,18 +357,18 @@ contract SupplyChain {
     // }
 
 
-    function getItemsForSaleArray() public correctOwner returns (uint[]){
+    function getItemsForSaleArray() public constant correctOwner returns (uint[]){
 
         return itemsForSale;
     }
 
-    function getOwnedItemsArray() public correctOwner returns(uint[]){
+    function getOwnedItemsArray() public constant correctOwner returns(uint[]){
 
         return owners[msg.sender].ownedItems;
 
     }
 
-    function getItemParents(uint serial) public returns(uint[]){
+    function getItemParents(uint serial) public constant returns(uint[]){
         if(items[serial].identification != serial){
             throw;
         }
