@@ -4,8 +4,8 @@ import "../stylesheets/app.css";
 // Import libraries we need.
 import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract';
-// import {EthereumClient, smartContract} from '../../SmartContractSetup.js';
-//Call Functions as smartcontract.function() for constant. add constant
+import {smartContract, EthClient} from '../../SmartContractSetup.js';
+//Call Functions as smartContract.function() 
 //smartcontract.fucntion.sendTransaction(parameters,  {from: EthereumClient.eth.accounts[0], gas:100000})
 
 // Import our contract artifacts and turn them into usable abstractions.
@@ -13,7 +13,7 @@ import supplyChain_artifacts from '../../build/contracts/SupplyChain.json';
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 var SupplyChain = contract(supplyChain_artifacts);
-
+const EthereumClient = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
 // For application bootstrapping, check out window.addEventListener below.
@@ -23,12 +23,14 @@ var account;
 window.App = {
   start: function() {
     var self = this;
-
+    console.log("started");
     // Bootstrap the MetaCoin abstraction for Use.
-    SupplyChain.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
+    // SupplyChain.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
+    SupplyChain.setProvider(web3.currentProvider);
+    console.log("provided");
 
     // Get the initial account balance so it can be displayed.
-    web3.eth.getAccounts(function(err, accs) {
+    web3.eth.getAccounts(function(err, accs) {  
       if (err != null) {
         alert("There was an error fetching your accounts.");
         return;
@@ -53,31 +55,43 @@ window.App = {
 
   joinContract: function(name) {
     var self = this;
+      // console.log(SupplyChain.deployed());
+      var x;
       SupplyChain.deployed().then(function(instance) {
-        console.log("test");
-        instance.join(name, {from: account});
-
+        // var x = instance.join.sendTransaction(name, {from: EthereumClient.eth.accounts[0], gas: 100000});
+        x = smartContract.join.call(name,  {from: EthClient.eth.accounts[0], gas:100000});
+        // smartContract.join.sendTransaction(name,  {from: EthClient.eth.accounts[0], gas:100000});
+        // funds = instance.viewFunds.sendTransaction({from: account});
         // smartContract.join.sendTransaction(name, {from: EthereumClient.eth.accounts[0], gas:100000});
+        // console.log(x);
 
       }).then(function() {
-          console.log(name + " joined contract successfully.");
+          // console.log(name + " joined contract successfully.");
+          console.log(x);
       }).catch(function(e) {
           console.log(e);
       });
-
+      // console.log(funds);
+      return x;
   },
 
   viewFunds: function() {
-      var self = this;
-      var funds;
+      // window.App.start();
 
-      SupplyChain.deployed().then(function(instance) {
-          funds = instance.viewFunds({from: account});
-      }).then(function() {
-          console.log(funds);
-      }).catch(function(e) {
-          console.log(e);
-      });
+      var self = this;
+
+      var funds = smartContract.viewFunds.sendTransaction({from: EthClient.eth.accounts[0], gas:100000});
+      // console.log("viewfunds");
+      // SupplyChain.deployed().then(function(instance) {
+      //     console.log("shit");
+      //     // funds = instance.viewFunds.sendTransaction({from: account});
+      //     funds = smartContract.viewFunds.sendTransaction({from: EthClient.eth.accounts[0], gas:100000});
+      // }).then(function() {
+      //     console.log(funds);
+      // }).catch(function(e) {
+      //     console.log(e);
+      // });
+      console.log(funds);
 
       return funds;
   },
@@ -120,6 +134,7 @@ window.App = {
 
       SupplyChain.deployed().then(function(instance) {
           success = instance.deposit(amount, {from: account});
+          console.log(success);
           if (success == "true") {
               console.log("Deposit successful.");
           } else {
@@ -174,7 +189,7 @@ window.App = {
     var self = this;
     var saleArray;
     SupplyChain.deployed().then(function(instance) {
-        saleArray = instance.getItemForSaleArray();
+        saleArray = instance.getItemsForSaleArray();
 
     }).catch(function(e) {
         console.log(e);

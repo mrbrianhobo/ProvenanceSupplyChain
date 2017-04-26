@@ -38,6 +38,10 @@ contract SupplyChain {
         _;
     }
 
+    function SupplyChain(){
+        
+    }
+
 
     function join(string name) public returns (string) {
         if (owners[msg.sender].addr == msg.sender) {
