@@ -53,6 +53,17 @@ contract SupplyChain {
         return "You have joined the contract!";
     }
 
+    function hasJoined() public constant returns(bool){
+        if(owners[msg.sender].addr == msg.sender){
+            return true;
+        }
+        return false;
+    }
+
+    function getYourName() public constant correctOwner returns(string){
+        return owners[msg.sender].name;
+    }
+
     function deposit() public payable correctOwner returns (string) {
         if (msg.value <= 0) {
             return "That is not a valid deposit.";
@@ -65,7 +76,7 @@ contract SupplyChain {
 
     }
 
-    function viewFunds() public correctOwner returns (uint256){
+    function viewFunds() public correctOwner constant returns (uint256){
 
         return owners[msg.sender].value;
     }

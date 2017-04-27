@@ -56,31 +56,40 @@ window.App = {
   joinContract: function(name) {
     var self = this;
       // console.log(SupplyChain.deployed());
-      var x;
-      SupplyChain.deployed().then(function(instance) {
-        // var x = instance.join.sendTransaction(name, {from: EthereumClient.eth.accounts[0], gas: 100000});
-        x = smartContract.join.call(name,  {from: EthClient.eth.accounts[0], gas:100000});
-        // smartContract.join.sendTransaction(name,  {from: EthClient.eth.accounts[0], gas:100000});
-        // funds = instance.viewFunds.sendTransaction({from: account});
-        // smartContract.join.sendTransaction(name, {from: EthereumClient.eth.accounts[0], gas:100000});
-        // console.log(x);
+      var x = smartContract.join.sendTransaction(name,  {from: EthClient.eth.accounts[0], gas:1000000});
+      console.log(x);
+      // SupplyChain.deployed().then(function(instance) {
+      //   // var x = instance.join.sendTransaction(name, {from: EthereumClient.eth.accounts[0], gas: 100000});
+      //   x = smartContract.join.call(name,  {from: EthClient.eth.accounts[0], gas:100000});
+      //   // smartContract.join.sendTransaction(name,  {from: EthClient.eth.accounts[0], gas:100000});
+      //   // funds = instance.viewFunds.sendTransaction({from: account});
+      //   // smartContract.join.sendTransaction(name, {from: EthereumClient.eth.accounts[0], gas:100000});
+      //   // console.log(x);
 
-      }).then(function() {
-          // console.log(name + " joined contract successfully.");
-          console.log(x);
-      }).catch(function(e) {
-          console.log(e);
-      });
+      // }).then(function() {
+      //     // console.log(name + " joined contract successfully.");
+      //     console.log(x);
+      // }).catch(function(e) {
+      //     console.log(e);
+      // });
       // console.log(funds);
-      return x;
+      if(smartContract.hasJoined.call()){
+        return "You have joined the contract as " + smartContract.getYourName.call();
+      }
+      else {
+        return "There was an error joining the contract.";
+      }
+
   },
+
 
   viewFunds: function() {
       // window.App.start();
 
       var self = this;
 
-      var funds = smartContract.viewFunds.sendTransaction({from: EthClient.eth.accounts[0], gas:100000});
+      // var funds = smartContract.viewFunds.sendTransaction({from: EthClient.eth.accounts[0], gas:100000});
+      var funds = smartContract.viewFunds.call().toNumber();
       // console.log("viewfunds");
       // SupplyChain.deployed().then(function(instance) {
       //     console.log("shit");
@@ -96,53 +105,76 @@ window.App = {
       return funds;
   },
 
+  gerYourName: function() {
+      // window.App.start();
+
+      var self = this;
+
+      // var funds = smartContract.viewFunds.sendTransaction({from: EthClient.eth.accounts[0], gas:100000});
+      var name = smartContract.getYourName.call().toNumber();
+      // console.log("viewfunds");
+      // SupplyChain.deployed().then(function(instance) {
+      //     console.log("shit");
+      //     // funds = instance.viewFunds.sendTransaction({from: account});
+      //     funds = smartContract.viewFunds.sendTransaction({from: EthClient.eth.accounts[0], gas:100000});
+      // }).then(function() {
+      //     console.log(funds);
+      // }).catch(function(e) {
+      //     console.log(e);
+      // });
+
+
+      return name;
+  },
+
 
   getCurrentOwner: function(serial) {
       var self = this;
-      var owner;
+      var owner = smartContract.getCurrentOwner.call(serial);
 
-      SupplyChain.deployed().then(function(instance) {
-          owner = instance.getCurrentOwner(serial, {from: account});
-      }).then(function() {
-          console.log(owner);
-      }).catch(function(e) {
-          console.log(e);
-      });
+      // SupplyChain.deployed().then(function(instance) {
+      //     owner = instance.getCurrentOwner(serial, {from: account});
+      // }).then(function() {
+      //     console.log(owner);
+      // }).catch(function(e) {
+      //     console.log(e);
+      // });
 
-      return smartContract.getCurrentOwner(id);
+      return owner;
   },
 
 
   getOwnerHistory: function(serial) {
       var self = this;
-      var history;
+      var history = smartContract.getOwnerHistoryArray(serial);
 
-      SupplyChain.deployed().then(function(instance) {
-          history = instance.getOwnerHistoryArray(serial, {from: account});
-          console.log(history);
-      }).catch(function(e) {
-          console.log(e);
-      });
+      // SupplyChain.deployed().then(function(instance) {
+      //     history = instance.getOwnerHistoryArray(serial, {from: account});
+      //     console.log(history);
+      // }).catch(function(e) {
+      //     console.log(e);
+      // });
 
       return history;
   },
 
 
-  deposit: function(amount) {
+  deposit: function() {
       var self = this;
-      var success;
 
-      SupplyChain.deployed().then(function(instance) {
-          success = instance.deposit(amount, {from: account});
-          console.log(success);
-          if (success == "true") {
-              console.log("Deposit successful.");
-          } else {
-              console.log("Deposit failed.");
-          }
-      }).catch(function(e) {
-          console.log(e);
-      });
+      var dep = smartContract.deposit.sendTransaction({from: EthClient.eth.accounts[0], gas:1000000});
+      var success = smartContract.deposit.call();
+      // SupplyChain.deployed().then(function(instance) {
+      //     success = instance.deposit(amount, {from: account});
+      //     console.log(success);
+      //     if (success == "true") {
+      //         console.log("Deposit successful.");
+      //     } else {
+      //         console.log("Deposit failed.");
+      //     }
+      // }).catch(function(e) {
+      //     console.log(e);
+      // });
 
       return success;
   },
@@ -152,34 +184,36 @@ window.App = {
       var self = this;
       var success;
 
-      SupplyChain.deployed().then(function(instance) {
-          success = instance.withdraw({from: account});
-          if (success == "true") {
-              console.log("Withdraw successful.");
-          } else {
-              console.log("Withdraw failed.");
-          }
-      }).catch(function(e) {
-          console.log(e);
-      });
+      var dep = smartContract.withdraw.sendTransaction({from: EthClient.eth.accounts[0], gas:1000000});
+      var success = smartContract.withdraw.call();
+      // SupplyChain.deployed().then(function(instance) {
+      //     success = instance.withdraw({from: account});
+      //     if (success == "true") {
+      //         console.log("Withdraw successful.");
+      //     } else {
+      //         console.log("Withdraw failed.");
+      //     }
+      // }).catch(function(e) {
+      //     console.log(e);
+      // });
 
       return success;
   },
 
   getItemName: function(id) {
     var self = this;
-    var name;
-    SupplyChain.deployed().then(function(instance) {
-        name = instance.getItemName(id);
+    var name = smartContract.getItemName.call(id);
+    // SupplyChain.deployed().then(function(instance) {
+    //     name = instance.getItemName(id);
 
-        if (name != null) {
-            console.log(name);
-        } else {
-            console.log("No such item.");
-        }
-    }).catch(function(e) {
-        console.log(e);
-    });
+    //     if (name != null) {
+    //         console.log(name);
+    //     } else {
+    //         console.log("No such item.");
+    //     }
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
     return name;
 
@@ -187,13 +221,13 @@ window.App = {
 
   getItemsForSale: function() {
     var self = this;
-    var saleArray;
-    SupplyChain.deployed().then(function(instance) {
-        saleArray = instance.getItemsForSaleArray();
+    var saleArray = smartContract.getItemsForSaleArray.call();
+    // SupplyChain.deployed().then(function(instance) {
+    //     saleArray = instance.getItemsForSaleArray();
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
     return saleArray; //array of uints
   },
@@ -201,138 +235,147 @@ window.App = {
 
   getOwnedItems: function() {
     var self = this;
-    var ownedItems;
-    SupplyChain.deployed().then(function(instance) {
-        ownedItems = instance.getOwnedItemsArray();
+    var ownedItems = smartContract.getOwnedItemsArray.call();;
+    // SupplyChain.deployed().then(function(instance) {
+    //     ownedItems = instance.getOwnedItemsArray();
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
     return ownedItems; //array of uints
 
   },
 
-  getSalePrice: function(id) {
+  getSalePrice: function(serial) {
     var self = this;
-    var salePrice;
-    SupplyChain.deployed().then(function(instance) {
-        ownedItems = instance.getSalePrice(id);
+    var salePrice = smartContract.getSalePrice(serial);
+    // SupplyChain.deployed().then(function(instance) {
+    //     ownedItems = instance.getSalePrice(id);
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
-    return ownedItems;  //int
+    return salePrice;  //int
     
   },
 
-  getIsActive: function(id) {
+  getIsActive: function(serial) {
     var self = this;
-    var active;
-    SupplyChain.deployed().then(function(instance) {
-        active = instance.getIsActive(id);
+    var active = smartContract.getIsActive(serial);
+    // SupplyChain.deployed().then(function(instance) {
+    //     active = instance.getIsActive(id);
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
     return active; //boolean
 
   },
 
-  getItemParents: function(id) {
+  getItemParents: function(serial) {
     var self = this;
-    var parents;
-    SupplyChain.deployed().then(function(instance) {
-        parents = instance.getItemParents(id);
+    var parents = smartContract.getItemParents.call(serial);
+    // SupplyChain.deployed().then(function(instance) {
+    //     parents = instance.getItemParents(id);
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
     return parents; //array of uints
 
   },
 
-  isValidItem: function(id) {
+  isValidItem: function(serial) {
     var self = this;
-    var valid;
-    SupplyChain.deployed().then(function(instance) {
-        valid = instance.isValidItem(id);
+    var valid = smartContract.isValidItem.call(serial);
+    // SupplyChain.deployed().then(function(instance) {
+    //     valid = instance.isValidItem(serial);
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
     return valid; //boolean
   },
 
-  addItem: function(id, name){
+  addItem: function(serial, name){
     var self = this;
-    var added;
-    SupplyChain.deployed().then(function(instance) {
-        added = instance.addNewItem(id, name, {from: account});
+    var addCheck = smartContract.addNewItem.call(serial, name);
+    var added = smartContract.addNewItem.sendTransaction(serial, name, {from: EthClient.eth.accounts[0], gas:1000000});
+    // SupplyChain.deployed().then(function(instance) {
+    //     added = instance.addNewItem(id, name, {from: account});
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
-    return added; //Return an alert
+    return addCheck; //Return an alert
     
   },
 
   addSoda: function(id, name){
     var self = this;
-    var added;
-    SupplyChain.deployed().then(function(instance) {
-        added = instance.createNewSoda(id, name, {from: account});
+    var addCheck = smartContract.createNewSoda.call(serial, name);
+    var added = smartContract.createNewSoda.sendTransaction(serial, name, {from: EthClient.eth.accounts[0], gas:1000000});
+    console.log(added);
+    // SupplyChain.deployed().then(function(instance) {
+    //     added = instance.createNewSoda(id, name, {from: account});
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
-    return added; //Return an alert
+    return addCheck; //Return an alert
     
   },
 
-  purchaseItem: function(id){
+  purchaseItem: function(serial){
     var self = this;
-    var purchase;
-    SupplyChain.deployed().then(function(instance) {
-        added = instance.purchase(id, {from: account});
+    var pruchaseCheck = smartContract.purchase.call(serial);
+    var purchased = smartContract.purchase.sendTransaction(serial, {from: EthClient.eth.accounts[0], gas:1000000});
+    console.log(purchased);
+    // SupplyChain.deployed().then(function(instance) {
+    //     added = instance.purchase(id, {from: account});
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
-    return added; //return an alert
+    return pruchaseCheck; //return an alert
   },
 
-  markForSale: function(id, value){
+  markForSale: function(serial, value){
     var self = this;
-    var sale;
-    SupplyChain.deployed().then(function(instance) {
-        sale = instance.markForSale(id, value, {from: account});
+    var saleCheck = smartContract.markForSale.call(serial, value);
+    var sale = smartContract.markForSale.sendTransaction(serial, {from: EthClient.eth.accounts[0], gas:1000000});
+    console.log(sale);
+    // SupplyChain.deployed().then(function(instance) {
+    //     sale = instance.markForSale(id, value, {from: account});
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
-    return sale; //return an alert
+    return saleCheck; //return an alert
   },
 
-  undoForSale: function(id){
+  undoForSale: function(serial){
     var self = this;
-    var undo;
-    SupplyChain.deployed().then(function(instance) {
-        undo = instance.undoForSale(id, {from: account});
+    var undoCheck = smartContract.undoForSale.call(serial);
+    var undo = smartContract.undoForSale.sendTransaction(serial, {from: EthClient.eth.accounts[0], gas:1000000});
+    console.log(undo);
+    // SupplyChain.deployed().then(function(instance) {
+    //     undo = instance.undoForSale(id, {from: account});
 
-    }).catch(function(e) {
-        console.log(e);
-    });
+    // }).catch(function(e) {
+    //     console.log(e);
+    // });
 
-    return undo; //return an alert
+    return undoCheck; //return an alert
   },
 
   
