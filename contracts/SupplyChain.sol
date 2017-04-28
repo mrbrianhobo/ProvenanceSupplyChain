@@ -69,7 +69,7 @@ contract SupplyChain {
             return "That is not a valid deposit.";
         }
 
-        uint256 amount = msg.value/1000000000000000000;
+        uint256 amount = msg.value;  //1000000000000000000;
         owners[msg.sender].value += amount;
         return "You have successfully deposited: ".toSlice().concat(uintToString(amount).toSlice());
         // return "You have successfully deposited the money";

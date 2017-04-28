@@ -74,7 +74,13 @@ window.App = {
       // });
       // console.log(funds);
       if(smartContract.hasJoined.call()){
-        return "You have joined the contract as " + smartContract.getYourName.call();
+        var currName = smartContract.getYourName.call();
+        if(currName == name){
+          return "You have joined the contract as " + currName;
+        }
+        else {
+          return "You have already joined as " + currName;
+        }
       }
       else {
         return "There was an error joining the contract.";
@@ -100,18 +106,18 @@ window.App = {
       // }).catch(function(e) {
       //     console.log(e);
       // });
-      console.log(funds);
+      // console.log(funds);
 
       return funds;
   },
 
-  gerYourName: function() {
+  getMyName: function() {
       // window.App.start();
 
       var self = this;
 
       // var funds = smartContract.viewFunds.sendTransaction({from: EthClient.eth.accounts[0], gas:100000});
-      var name = smartContract.getYourName.call().toNumber();
+      var name = smartContract.getYourName.call();
       // console.log("viewfunds");
       // SupplyChain.deployed().then(function(instance) {
       //     console.log("shit");
@@ -159,11 +165,11 @@ window.App = {
   },
 
 
-  deposit: function() {
+  deposit: function(amount) {
       var self = this;
 
-      var dep = smartContract.deposit.sendTransaction({from: EthClient.eth.accounts[0], gas:1000000});
-      var success = smartContract.deposit.call();
+      var dep = smartContract.deposit.sendTransaction({from: EthClient.eth.accounts[0],  gas:1000000, value: amount});
+      var success = smartContract.deposit.call({from: EthClient.eth.accounts[0],  gas:1000000, value: amount});
       // SupplyChain.deployed().then(function(instance) {
       //     success = instance.deposit(amount, {from: account});
       //     console.log(success);
@@ -249,7 +255,7 @@ window.App = {
 
   getSalePrice: function(serial) {
     var self = this;
-    var salePrice = smartContract.getSalePrice(serial);
+    var salePrice = smartContract.getSalePrice.call(serial);
     // SupplyChain.deployed().then(function(instance) {
     //     ownedItems = instance.getSalePrice(id);
 
@@ -263,7 +269,7 @@ window.App = {
 
   getIsActive: function(serial) {
     var self = this;
-    var active = smartContract.getIsActive(serial);
+    var active = smartContract.getIsActive.call(serial);
     // SupplyChain.deployed().then(function(instance) {
     //     active = instance.getIsActive(id);
 
@@ -317,7 +323,7 @@ window.App = {
     
   },
 
-  addSoda: function(id, name){
+  addSoda: function(serial, name){
     var self = this;
     var addCheck = smartContract.createNewSoda.call(serial, name);
     var added = smartContract.createNewSoda.sendTransaction(serial, name, {from: EthClient.eth.accounts[0], gas:1000000});
@@ -351,7 +357,8 @@ window.App = {
   markForSale: function(serial, value){
     var self = this;
     var saleCheck = smartContract.markForSale.call(serial, value);
-    var sale = smartContract.markForSale.sendTransaction(serial, {from: EthClient.eth.accounts[0], gas:1000000});
+
+    var sale = smartContract.markForSale.sendTransaction(serial, value, {from: EthClient.eth.accounts[0], gas:1000000});
     console.log(sale);
     // SupplyChain.deployed().then(function(instance) {
     //     sale = instance.markForSale(id, value, {from: account});
