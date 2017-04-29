@@ -53,18 +53,19 @@
 
 
 
-            // $( App.getItemsForSale().split(',') ).each(function(id) {
-            //     var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
-            //     var name    = App.getItemName(parseInt(id));
-            //     var price   = App.getSalePrice(parseInt(id));
-            //     var owner   = App.getCurrentOwner(parseInt(id));
-            //     $("#items-table").append("<tr>" +
-            //                                 "<td>" + idStr   + "</td>" +
-            //                                 "<td>" + name    + "</td>" +
-            //                                 "<td>" + price   + "</td>" +
-            //                                 "<td>" + owner   + "</td>" +
-            //                             "</tr>");
-            // });
+            $( App.getItemsForSale() ).each(function(index, bignum) {
+                var id      = bignum.toNumber();
+                var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
+                var name    = App.getItemName(id);
+                var price   = App.getSalePrice(id);
+                var owner   = App.getCurrentOwner(id);
+                $("#items-table").append("<tr>" +
+                                            "<td>" + idStr   + "</td>" +
+                                            "<td>" + name    + "</td>" +
+                                            "<td>" + price   + "</td>" +
+                                            "<td>" + owner   + "</td>" +
+                                        "</tr>");
+            });
 
         });
 

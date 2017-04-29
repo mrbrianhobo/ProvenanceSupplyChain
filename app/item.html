@@ -104,19 +104,19 @@
                 $("#item-info-section").show();
 
                 var id = parseInt(getUrlParameter('id'));
-                if (App.isValidItem(id) != "true") {
+                if (App.isValidItem(id) != true) {
                     $("#item-id-cell").text(id);
                     $("#item-name-cell").text("*No Such Item*");
                 }
                 else {
                     var name    = App.getItemName(id);
                     var owner   = App.getCurrentOwner(id);
-                    var forSale = App.getIsItemForSale(id);
+                    var forSale = App.getSalePrice(id).toNumber() != 0;
                     var status  = App.getIsActive(id);
                     var salePrice;
 
-                    if (forSale == "true") {
-                        salePrice = App.getSalePrice(id);
+                    if (forSale == true) {
+                        salePrice = App.getSalePrice(id).toNumber();
                     } else {
                         salePrice = 0;
                     }

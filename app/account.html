@@ -74,13 +74,15 @@
             // $( ["Amoxicillin", "Pseudoephedrine", "Esomeprazole Magnesium", "Fluoxetine", "Duloxetine"] ).each(function(i, item) {
             //     var price = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input type='text' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>"
             //     $("#items-table").append("<tr><td>" + item + "</td><td>" + price + "</td><td><input type='checkbox' name='For Sale' style='width:50px'></input></td></tr>");
-            $( App.getItemsForSale().split(',') ).each(function(id) {
+            console.log(App.getItemsForSale());
+            $( App.getItemsForSale() ).each(function(index, bignum) {
+                id = bignum.toNumber();
                 var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
-                var name    = App.getItemName(parseInt(id));
+                var name    = App.getItemName(id);
                 var price   = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input type='text' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>";
                 var mark    = "<input type='checkbox' name='For Sale' style='width:50px'></input>";
                 $("#items-table").append("<tr>" +
-                                             "<td>" + itemStr + "</td>" +
+                                             "<td>" + idStr + "</td>" +
                                              "<td>" + name    + "</td>" +
                                              "<td>" + price   + "</td>" +
                                              "<td>" + mark    + "</td>" +
