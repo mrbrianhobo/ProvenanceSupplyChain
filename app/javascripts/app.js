@@ -188,10 +188,10 @@ window.App = {
 
   withdraw: function() {
       var self = this;
-      var success;
+      // var success;
 
       var dep = smartContract.withdraw.sendTransaction({from: EthClient.eth.accounts[0], gas:1000000});
-      var success = smartContract.withdraw.call();
+      // var success = smartContract.withdraw.call({from: EthClient.eth.accounts[0], gas:1000000});
       // SupplyChain.deployed().then(function(instance) {
       //     success = instance.withdraw({from: account});
       //     if (success == "true") {
@@ -203,7 +203,7 @@ window.App = {
       //     console.log(e);
       // });
 
-      return success;
+      // return success;
   },
 
   getItemName: function(id) {

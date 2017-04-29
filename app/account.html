@@ -19,6 +19,15 @@
     <div id="insert-navbar"></div>
 
     <div class="container">
+        <h2>Account</h2>
+        <br>
+        <b><big> Name: </big><b>
+        <b><big id = "name" ></big><b>
+        <br>
+        <b><big id = "balance-display" ></big><b>
+
+        <br>
+        <hr>    
         <h2>Manage Funds</h2>
 
         <br>
@@ -63,19 +72,23 @@
             $("#insert-navbar").load("nav.html");
             displayBalance();
 
+            $("#name").text(App.getMyName());
+
             $('#withdraw-submit').on('click', function(event) {
-                App.withdraw(parseInt($('#withdraw-input').val()));
+                App.withdraw();//parseInt($('#withdraw-input').val()));
+                location.reload();
             });
 
             $('#deposit-submit').on('click', function(event) {
                 App.deposit(parseInt($('#deposit-input').val()));
+                location.reload();
             });
 
             // $( ["Amoxicillin", "Pseudoephedrine", "Esomeprazole Magnesium", "Fluoxetine", "Duloxetine"] ).each(function(i, item) {
             //     var price = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input type='text' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>"
             //     $("#items-table").append("<tr><td>" + item + "</td><td>" + price + "</td><td><input type='checkbox' name='For Sale' style='width:50px'></input></td></tr>");
-            console.log(App.getItemsForSale());
-            $( App.getItemsForSale() ).each(function(index, bignum) {
+            // console.log(App.getItemsForSale());
+            $( App.getOwnedItems() ).each(function(index, bignum) {
                 id = bignum.toNumber();
                 var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
                 var name    = App.getItemName(id);

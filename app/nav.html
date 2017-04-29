@@ -14,8 +14,30 @@
                 <li><a href="/account.html">My Account</a></li>
                 <li><a href="/items.html">Items For Sale</a></li>
                 <li><a href="/item.html">Search</a></li>
-                <p class="navbar-text" id="balance-display">Current Balance: $9,017.87</p>
+                <p class="navbar-text" id="balance-display"></p>
 			</ul>
 		</div><!-- /.navbar-collapse -->
 	</div>
+	<script type="text/javascript">
+
+        var displayBalance = function() {
+            var balanceString = "Current Balance: $";
+            var balance = App.viewFunds();
+            if (parseInt(balance)) {
+                balanceString += balance;
+            } else {
+                balanceString += "0";
+            }
+
+            $("#balance-display").text(balanceString);
+        }
+
+        $(document).ready(function() {
+
+          
+            displayBalance();
+
+        });
+
+    </script>
 </nav>
