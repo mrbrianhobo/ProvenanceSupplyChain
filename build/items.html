@@ -8,11 +8,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/g/sweetalert2@6.6.2(sweetalert2.min.css+sweetalert2.css)">
   </head>
   <body>
 
@@ -21,58 +17,60 @@
     <div class="container">
         <h2>Items For Sale</h2>
         <table class="table" id="items-table">
-            <th>ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Owner</th>
-            <th>Purchase</th>
+            <thead>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Owner</th>
+                <th></th>
+            </thead>
+            <tbody>
+                <!-- generated content -->
+            </tbody>
         </table>
     </div>
 
 
-    <script src="./app.js"></script>
+    <script src="https://cdn.jsdelivr.net/g/sweetalert2@6.6.2(sweetalert2.min.js+sweetalert2.js)"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="./app.js"></script>
     <script type="text/javascript">
 
-        var displayBalance = function() {
-            var balanceString = "Current Balance: $";
-            var balance = App.viewFunds();
-            if (parseInt(balance)) {
-                balanceString += balance;
-            } else {
-                balanceString += "0";
-            }
-
-            $("#balance-display").text(balanceString);
-        }
-
         $(document).ready(function() {
+            $('#insert-navbar').load('nav.html');
+            window.displayBalance();
 
-            $("#insert-navbar").load("nav.html");
-            displayBalance();
-
-
-
-            $( App.getItemsForSale() ).each(function(index, bignum) {
-                var id      = bignum.toNumber();
-                var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
-                var name    = App.getItemName(id);
-                var price   = App.getSalePrice(id);
-                var owner   = App.getCurrentOwner(id);
-                $("#items-table").append("<tr>" +
-                                            "<td>" + idStr   + "</td>" +
-                                            "<td>" + name    + "</td>" +
-                                            "<td>" + price   + "</td>" +
-                                            "<td>" + owner   + "</td>" +
-                                            "<td><button id=" + id + " type=\"button\" class=\"btn btn-default buy-submit\" >Purchase</button></td>" +
-                                        "</tr>");
-            });
+            function populateTable() {
+                $('#items-table tbody').empty();
+                $( App.getItemsForSale() ).each(function(index, bignum) {
+                    var id      = bignum.toNumber();
+                    var name    = App.getItemName(id);
+                    var price   = '$' + parseFloat(App.getSalePrice(id)).formatMoney();
+                    var owner   = App.getCurrentOwner(id);
+                    var idStr   = '&#8627;<a href="/item.html?id=' + id + '">' + id + '</a>';
+                    var button  = '<a href="#" id=' + id + ' type="button" class="btn btn-default buy-submit">Purchase</button>'
+                    $('#items-table tbody').append('<tr>' +
+                                                '<td>' + idStr  + '</td>' +
+                                                '<td>' + name   + '</td>' +
+                                                '<td>' + price  + '</td>' +
+                                                '<td>' + owner  + '</td>' +
+                                                '<td>' + button + '</td>' +
+                                            '</tr>');
+                });
+            }
+            populateTable();
 
             $('.buy-submit').on('click', function(event) {
-                var status = App.purchaseItem(event.target.id);
-                alert(status);
-                location.reload();
+                var response = App.purchaseItem(event.target.id);
+                if (response.includes('You have purchased the item')) {
+                    swal('Success!', response, 'success').then(function() {
+                        populateTable();
+                    });
+                }
+                else {
+                    swal('Error!', response, 'error');
+                }
             });
 
         });

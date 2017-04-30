@@ -18,26 +18,4 @@
 			</ul>
 		</div><!-- /.navbar-collapse -->
 	</div>
-	<script type="text/javascript">
-
-        var displayBalance = function() {
-            var balanceString = "Current Balance: $";
-            var balance = App.viewFunds();
-            if (parseInt(balance)) {
-                balanceString += balance;
-            } else {
-                balanceString += "0";
-            }
-
-            $("#balance-display").text(balanceString);
-        }
-
-        $(document).ready(function() {
-
-          
-            displayBalance();
-
-        });
-
-    </script>
 </nav>

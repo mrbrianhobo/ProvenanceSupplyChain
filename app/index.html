@@ -8,11 +8,8 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/g/sweetalert2@6.6.2(sweetalert2.min.css+sweetalert2.css)">
 
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body id="index">
 
@@ -22,22 +19,26 @@
     <button id="join-submit" type="button" class="btn btn-default">Join</button>
 
 
-    <script src="./app.js"></script>
+    <!-- Javascript -->
+    <script src="https://cdn.jsdelivr.net/g/sweetalert2@6.6.2(sweetalert2.min.js+sweetalert2.js)"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="./app.js"></script>
     <script type="text/javascript">
 
         $(document).ready(function() {
-
-            // $("#insert-navbar").load("nav.html");
-
             $('#join-submit').on('click', function(event) {
-                var x = App.joinContract($('#join-input').val());
-                alert(x);
-                window.location = "account.html";
+                var response = App.joinContract($('#join-input').val());
+
+                if (response.includes('You have joined the contract as')) {
+                    swal('Success!', response, 'success').then(function() {
+                        window.location = 'account.html';
+                    });
+                }
+                else {
+                    swal('Error', response, 'error');
+                }
             });
-
-
         });
 
     </script>

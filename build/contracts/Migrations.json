@@ -238,8 +238,8 @@
     "1493424683038": {
       "events": {},
       "links": {},
-      "address": "0x683c13e8ff441b17e934f2667eac4c21668c4b4c",
-      "updated_at": 1493424708977
+      "address": "0xcdddfb122ef6ccd5e7ff91d351e0c5228a16ef0a",
+      "updated_at": 1493511625294
     },
     "1493444867918": {
       "events": {},
@@ -258,8 +258,14 @@
       "links": {},
       "address": "0x0ddaa299f497a9437be5925e514a5c4e36ecc5eb",
       "updated_at": 1493505987474
+    },
+    "1493514302587": {
+      "events": {},
+      "links": {},
+      "address": "0x680be8fa77c1723e227105a34152fdd6465dd7b2",
+      "updated_at": 1493514309643
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1493505987474
+  "updated_at": 1493514309643
 }

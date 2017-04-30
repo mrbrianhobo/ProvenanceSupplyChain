@@ -1,170 +1,246 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>My Account</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/g/sweetalert2@6.6.2(sweetalert2.min.css+sweetalert2.css)'>
   </head>
+
   <body>
+    <div id='insert-navbar'></div>
 
-    <div id="insert-navbar"></div>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-4'>
+                <h2 class='heading'>Account Information</h2>
+                <hr>
+                <p class='name-display'></p>
+                <p class='balance-display'></p>
 
-    <div class="container">
-        <h2>Account</h2>
-        <br>
-        <b><big> Name: </big><b>
-        <b><big id = "name" ></big><b>
-        <br>
-        <b><big id = "balance-display" ></big><b>
+                <button id='deposit-submit' type='button' class='btn btn-default'>Deposit</button>
+                <button id='withdraw-submit' type='button' class='btn btn-default'>Withdraw</button>
+                <hr>
+            </div>
 
-        <br>
-        <hr>    
-        <h2>Manage Funds</h2>
-
-        <br>
-        <input style="max-width: 200px" id="withdraw-input" type="number" placeholder="Withdraw Amount"></input>
-        <button id="withdraw-submit" type="button" class="btn btn-default">Withdraw</button>
-
-        <br>
-        <input style="max-width: 200px" id="deposit-input" type="number" placeholder="Deposit Amount"></input>
-        <button id="deposit-submit" type="button" class="btn btn-default">Deposit</button>
-
-        <br>
-        <hr>
-        <h2>My Items </h2><!--<small>&nbsp;<a href="#">Add Item</a></small></h2> -->
-
-        <br>
-        <input style="max-width: 200px" id="Serial-input" type="number" placeholder="Item Serial Number"></input>
-        <input style="max-width: 200px" id="ItemName-input" type="text" placeholder="Item Name"></input>
-        <button id="AddItem-submit" type="button" class="btn btn-default">Add Item</button>
-
-        <br>
-
-        <br>
-        <input style="max-width: 200px" id="sell-serial-input" type="number" placeholder="Item Serial Number"></input>
-        <input style="max-width: 200px" id="price-input" type="number" placeholder="Item Price"></input>
-        <button id="MarkSale-submit" type="button" class="btn btn-default">Mark For Sale</button>
-        <br>
-
-        <br>
-        <input style="max-width: 200px" id="undo-serial-input" type="number" placeholder="Item Serial Number"></input>
-        <button id="UndoSale-submit" type="button" class="btn btn-default">Undo For Sale</button>
-
-        <br>
-        <br>
-        <table class="table" id="items-table" style="width:600px">
-            <th>ID</th>
-            <th>Name</th>
-            <th>For Sale</th>
-            <th>Price</th>
-            <!-- <th>Sell</th> -->
-        </table>
+        <div class='col-md-8'>
+            <h2>Manage Items <i id='add-item-submit' class='fa fa-plus-circle'></i></h2><!--<small>&nbsp;<a href='#'>Add Item</a></small></h2> -->
+            <hr>
+            <table class='table' id='items-table' style='width:600px'>
+                <thead>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>For Sale</th>
+                    <th>Price</th>
+                </thead>
+                <tbody id='items-table-body'>
+                    <!-- generated content -->
+                </tbody>
+            </table>
+        </div>
+    </div>
     </div>
 
-
-    <script src="./app.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-
-        var displayBalance = function() {
-            var balanceString = "Current Balance: $";
-            var balance = App.viewFunds();
-            if (parseInt(balance)) {
-                balanceString += balance;
-            } else {
-                balanceString += "0";
-            }
-
-            $("#balance-display").text(balanceString);
-        }
+    <!-- Javascript -->
+    <script src='https://cdn.jsdelivr.net/g/sweetalert2@6.6.2(sweetalert2.min.js+sweetalert2.js)'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script>
+    <script src='./app.js'></script>
+    <script type='text/javascript'>
 
         $(document).ready(function() {
+            $('#insert-navbar').load('nav.html');
+            window.displayBalance();
+            $('.name-display').html('<strong>Account name: </strong>' + App.getMyName());
 
-            $("#insert-navbar").load("nav.html");
-            displayBalance();
+            function populateTable() {
+                $('#items-table tbody').empty()
+                $( App.getOwnedItems() ).each(function(index, bignum) {
+                    id           = bignum.toNumber();
+                    var idStr    = '&#8627;<a href="/item.html?id=' + id + '">' + id + '</a>';
+                    var name     = App.getItemName(id);
+                    var forSale  = false;
+                    var checked  = '';
+                    var saleList = App.getItemsForSale();
+                    for (var i =0; i < saleList.length; i++) {
+                        if (id == saleList[i].toNumber()) {
+                            forSale = true;
+                            checked = ' checked';
+                            break;
+                        }
+                    }
+                    var price;
+                    if (forSale == false) {
+                        price = '<em>N/A</em>';
+                    }
+                    else {
+                        price = '$' + parseFloat(App.getSalePrice(id)).formatMoney();
+                    }
 
-            $("#name").text(App.getMyName());
+                    var checkbox = '<input class="mark-sale" id="item-' + id + '" type="checkbox" value="$10"' + checked + '>';
+
+                    $('#items-table-body').append('<tr>' +
+                                                  '<td>' + idStr    + '</td>' +
+                                                  '<td>' + name     + '</td>' +
+                                                  '<td>' + checkbox + '</td>' +
+                                                  '<td>' + price    + '</td>' +
+                                                  '</tr>');
+                });
+            }
+            populateTable();
+
 
             $('#withdraw-submit').on('click', function(event) {
-                App.withdraw();//parseInt($('#withdraw-input').val()));
-                location.reload();
-            });
-
-            $('#deposit-submit').on('click', function(event) {
-                App.deposit(parseInt($('#deposit-input').val()));
-                location.reload();
-            });
-
-            $('#AddItem-submit').on('click', function(event) {
-                App.addItem(parseInt($('#Serial-input').val()), $('#ItemName-input').val());
-                location.reload();
-            });
-
-            $('#MarkSale-submit').on('click', function(event) {
-                var status = App.markForSale(parseInt($('#sell-serial-input').val()), parseInt($('#price-input').val()));
-                alert(status);
-                location.reload();
-            });
-
-            $('#UndoSale-submit').on('click', function(event) {
-                var status = App.undoForSale(parseInt($('#undo-serial-input').val()));
-                alert(status);
-                location.reload();
-            });
-
-            // $( ["Amoxicillin", "Pseudoephedrine", "Esomeprazole Magnesium", "Fluoxetine", "Duloxetine"] ).each(function(i, item) {
-            //     var price = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input type='text' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>"
-            //     $("#items-table").append("<tr><td>" + item + "</td><td>" + price + "</td><td><input type='checkbox' name='For Sale' style='width:50px'></input></td></tr>");
-            // console.log(App.getItemsForSale());
-            $( App.getOwnedItems() ).each(function(index, bignum) {
-                id = bignum.toNumber();
-                var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
-                var name    = App.getItemName(id);
-                var forSale = false;
-                var saleList = App.getItemsForSale();
-                var i ; 
-                for(i =0; i < saleList.length; i++){
-                    // console.log(id);
-                    // console.log(saleList[i].toNumber())
-                    if(id == saleList[i].toNumber()){
-                        forSale = true;
-                        break;
-                    }
-                }
-                var price;
-                if(forSale == false){
-                    price = "Not for Sale";
+                var response = App.withdraw();
+                if (response.includes('You have withdrawn')) {
+                    swal('Success!', response, 'success');
+                    window.displayBalance();
                 }
                 else {
-                    price = App.getSalePrice(id);
+                    swal('Error!', response, 'error');
                 }
-
-                var sellPrice   = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input id = \"sellprice\" type='number' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>";
-                var mark    = "<input type='button' name='Sell' style='width:50px'></input>";
-                $("#items-table").append("<tr>" +
-                                             "<td>" + idStr + "</td>" +
-                                             "<td>" + name    + "</td>" +
-                                             "<td>" + forSale    + "</td>" +
-                                             "<td>" + price   + "</td>" +
-                                             // "<td>" + sellPrice   + "</td>" +
-                                             // "<td>" + mark    + "</td>" +
-                                         "</tr>");
             });
 
-            // $('#Sell').on('click', function(event) {
-            //     App.markForSale(id, parseInt($('#sellprice').val()));
-            //     location.reload();
-            // });
+
+            $('#deposit-submit').on('click', function(event) {
+                swal({
+                    title: 'Enter amount to deposit',
+                    input: 'number',
+                    showCancelButton: true,
+                    confirmButtonText: 'Deposit',
+                    showLoaderOnConfirm: true,
+                    allowOutsideClick: false,
+                    preConfirm: function(amount) {
+                        return new Promise(function(resolve, reject) {
+                            if (amount <= 0) {
+                                reject('Please enter a valid number.');
+                            }
+                            resolve();
+                        });
+                    },
+                }).then(function(amount) {
+                    var response = App.deposit(amount);
+                    if (response.includes('You have successfully')) {
+                        swal({
+                            type: 'success',
+                            title: 'Success!',
+                            html: 'You have successfully deposited $' + parseFloat(amount).formatMoney() + '.',
+                        });
+                        window.displayBalance();
+                    }
+                    else {
+                        swal({
+                            type: 'error',
+                            title: 'Error!',
+                            html: response,
+                        });
+                    }
+                });
+            });
+
+
+            $('#add-item-submit').on('click', function(event) {
+                swal.setDefaults({
+                    input: 'text',
+                    confirmButtonText: 'Next &rarr;',
+                    showCancelButton: true,
+                    animation: true,
+                    progressSteps: ['1', '2'],
+                });
+                var steps = ['Input Name', 'Input Serial Number',];
+                swal.queue(steps).then(function(result) {
+                    swal.resetDefaults();
+                    var id  = parseInt(result[1]);
+                    var name = result[0]
+
+                    var response = App.addItem(id, name);
+                    if (response.includes('You have successfully')) {
+                        swal({
+                            title: 'Successfully added ' + name + ' (id #' + id + ')',
+                            type: 'success',
+                            confirmButtonText: 'Close',
+                            showCancelButton: false,
+                        }).then(function() {
+                            populateTable();
+                        });
+                    }
+                    else {
+                        swal({
+                            title: 'Failed to add ' + name + ' (id #' + id + ')',
+                            html: response,
+                            type: 'error',
+                            confirmButtonText: 'Close',
+                            showCancelButton: false,
+                        });
+                    }
+                }, function () {
+                    swal.resetDefaults()
+                });
+            });
+
+
+            $(document).on('change', '.mark-sale', function(event) {
+                event.preventDefault();
+                var id = parseInt(event.target.id.replace('item-', ''));
+                if (event.target.checked) {
+                    swal({
+                        title: 'Enter price for item',
+                        input: 'number',
+                        showCancelButton: true,
+                        confirmButtonText: 'Set Price',
+                        showLoaderOnConfirm: true,
+                        allowOutsideClick: false,
+                    }).then(function(amount) {
+                        var response = App.markForSale(id, amount);
+                        if (response.includes('marked for sale')) {
+                            swal({
+                                type: 'success',
+                                title: 'Success!',
+                                html: 'You have successfully set the price to $' + parseFloat(amount).formatMoney() + '.',
+                            }).then(function() {
+                                // $('#item-' + id).prop('checked', false);
+                                populateTable();
+                            });
+                        }
+                        else {
+                            swal({
+                                type: 'error',
+                                title: 'Error!',
+                                html: response,
+                            });
+                            $('#item-' + id).prop('checked', false);
+                        }
+                    }, function(dismiss) {
+                        swal('Cancelled', 'Item not marked for sale.');
+                        $('#item-' + id).prop('checked', false);
+                    });
+                }
+                else {
+                    var response = App.undoForSale(id);
+                    if (response.includes('not for sale')) {
+                        swal({
+                            type: 'success',
+                            title: 'Success!',
+                            html: 'Item no longer marked for sale.',
+                        }).then(function() {
+                            // $('#item-' + id).prop('checked', false);
+                            populateTable();
+                        });
+                    }
+                    else {
+                        swal({
+                            type: 'error',
+                            title: 'Error!',
+                            html: response,
+                        });
+                        $('#item-' + id).prop('checked', true);
+                    }
+                }
+            });
 
         });
 

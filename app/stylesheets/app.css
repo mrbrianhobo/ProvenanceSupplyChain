@@ -1,8 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
 body {
-  /*margin-left: 25%;
-  margin-right: 25%;*/
-  /*margin-top: 10%;*/
-  font-family: "Open Sans", sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 body#index {
@@ -11,13 +10,7 @@ body#index {
     margin-top: 10%;
 }
 
-label {
-  display: inline-block;
-  width: 100px;
-}
-
 input {
-  width: 500px;
   padding: 5px;
   font-size: 16px;
 }
@@ -34,29 +27,11 @@ h1, h2 {
   margin-bottom: 10px;
 }
 
-h2 {
-  color: #AAA;
-  font-size: 32px;
-}
-
-h3 {
-  font-weight: normal;
-  color: #AAA;
-  font-size: 24px;
-}
-
-.black {
-  color: black;
-}
-
-#balance {
-  color: black;
-}
-
-.hint {
-  color: #666;
-}
-
 th {
     background-color: #eeeeee;
+}
+
+#add-item-submit:hover {
+    cursor: pointer;
+    cursor: hand;
 }
