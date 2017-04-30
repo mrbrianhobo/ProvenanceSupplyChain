@@ -40,12 +40,33 @@
 
         <br>
         <hr>
-        <h2>My Items <small>&nbsp;<a href="#">Add Item</a></small></h2>
+        <h2>My Items </h2><!--<small>&nbsp;<a href="#">Add Item</a></small></h2> -->
+
+        <br>
+        <input style="max-width: 200px" id="Serial-input" type="number" placeholder="Item Serial Number"></input>
+        <input style="max-width: 200px" id="ItemName-input" type="text" placeholder="Item Name"></input>
+        <button id="AddItem-submit" type="button" class="btn btn-default">Add Item</button>
+
+        <br>
+
+        <br>
+        <input style="max-width: 200px" id="sell-serial-input" type="number" placeholder="Item Serial Number"></input>
+        <input style="max-width: 200px" id="price-input" type="number" placeholder="Item Price"></input>
+        <button id="MarkSale-submit" type="button" class="btn btn-default">Mark For Sale</button>
+        <br>
+
+        <br>
+        <input style="max-width: 200px" id="undo-serial-input" type="number" placeholder="Item Serial Number"></input>
+        <button id="UndoSale-submit" type="button" class="btn btn-default">Undo For Sale</button>
+
+        <br>
+        <br>
         <table class="table" id="items-table" style="width:600px">
             <th>ID</th>
             <th>Name</th>
-            <th>Price</th>
             <th>For Sale</th>
+            <th>Price</th>
+            <!-- <th>Sell</th> -->
         </table>
     </div>
 
@@ -84,6 +105,23 @@
                 location.reload();
             });
 
+            $('#AddItem-submit').on('click', function(event) {
+                App.addItem(parseInt($('#Serial-input').val()), $('#ItemName-input').val());
+                location.reload();
+            });
+
+            $('#MarkSale-submit').on('click', function(event) {
+                var status = App.markForSale(parseInt($('#sell-serial-input').val()), parseInt($('#price-input').val()));
+                alert(status);
+                location.reload();
+            });
+
+            $('#UndoSale-submit').on('click', function(event) {
+                var status = App.undoForSale(parseInt($('#undo-serial-input').val()));
+                alert(status);
+                location.reload();
+            });
+
             // $( ["Amoxicillin", "Pseudoephedrine", "Esomeprazole Magnesium", "Fluoxetine", "Duloxetine"] ).each(function(i, item) {
             //     var price = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input type='text' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>"
             //     $("#items-table").append("<tr><td>" + item + "</td><td>" + price + "</td><td><input type='checkbox' name='For Sale' style='width:50px'></input></td></tr>");
@@ -92,15 +130,41 @@
                 id = bignum.toNumber();
                 var idStr   = "<a href='/item.html?id=" + id + "'>" + id + "</a>";
                 var name    = App.getItemName(id);
-                var price   = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input type='text' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>";
-                var mark    = "<input type='checkbox' name='For Sale' style='width:50px'></input>";
+                var forSale = false;
+                var saleList = App.getItemsForSale();
+                var i ; 
+                for(i =0; i < saleList.length; i++){
+                    // console.log(id);
+                    // console.log(saleList[i].toNumber())
+                    if(id == saleList[i].toNumber()){
+                        forSale = true;
+                        break;
+                    }
+                }
+                var price;
+                if(forSale == false){
+                    price = "Not for Sale";
+                }
+                else {
+                    price = App.getSalePrice(id);
+                }
+
+                var sellPrice   = "<div class=\"input-group\"><span class=\"input-group-addon\">$</span><input id = \"sellprice\" type='number' placeholder='Price' style='max-width:150px' class=\"form-control\"></div>";
+                var mark    = "<input type='button' name='Sell' style='width:50px'></input>";
                 $("#items-table").append("<tr>" +
                                              "<td>" + idStr + "</td>" +
                                              "<td>" + name    + "</td>" +
+                                             "<td>" + forSale    + "</td>" +
                                              "<td>" + price   + "</td>" +
-                                             "<td>" + mark    + "</td>" +
+                                             // "<td>" + sellPrice   + "</td>" +
+                                             // "<td>" + mark    + "</td>" +
                                          "</tr>");
             });
+
+            // $('#Sell').on('click', function(event) {
+            //     App.markForSale(id, parseInt($('#sellprice').val()));
+            //     location.reload();
+            // });
 
         });
 

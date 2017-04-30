@@ -40,6 +40,7 @@
                 <th>For Sale?</th>
                 <th>Sale Price</th>
                 <th>Active?</th>
+                <th>History</th>
             </tr>
             <tr>
                 <td id="item-id-cell">ID</td>
@@ -48,6 +49,7 @@
                 <td id="item-sale-cell">For Sale?</td>
                 <td id="item-price-cell">Sale Price</td>
                 <td id="item-status-cell">Active?</td>
+                <td id="item-history-cell">History</td>
             </tr>
         </table>
 
@@ -100,7 +102,7 @@
                 $("#item-info-section").hide();
             } else {
                 // display a particular item
-                $("#item-query-section").hide();
+                $("#item-query-section").show();
                 $("#item-info-section").show();
 
                 var id = parseInt(getUrlParameter('id'));
@@ -111,12 +113,25 @@
                 else {
                     var name    = App.getItemName(id);
                     var owner   = App.getCurrentOwner(id);
-                    var forSale = App.getSalePrice(id).toNumber() != 0;
+                    var forSale = App.getSalePrice(id) != 0;
                     var status  = App.getIsActive(id);
                     var salePrice;
+                    var histArray = App.getOwnerHistory(id);
+                    var hist = "";
+                    var i;
+                    for(i = 0; i < histArray.length; i++){
+                        if(i == 0){
+                            hist += App.getOwnerName(histArray[i]);
+                        }
+                        else{
+                            hist += "-->";
+                            hist += App.getOwnerName(histArray[i]);
+                        }
+                    }
+                    console.log(hist);
 
                     if (forSale == true) {
-                        salePrice = App.getSalePrice(id).toNumber();
+                        salePrice = App.getSalePrice(id);
                     } else {
                         salePrice = 0;
                     }
@@ -127,6 +142,7 @@
                     $("#item-sale-cell").text(forSale);
                     $("#item-price-cell").text(salePrice);
                     $("#item-status-cell").text(status);
+                    $("#item-history-cell").text(hist)
                 }
 
             }

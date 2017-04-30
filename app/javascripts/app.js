@@ -133,6 +133,12 @@ window.App = {
       return name;
   },
 
+  getOwnerName: function(addr){
+    var self = this;
+    var name = smartContract.getOwnerName.call(addr);
+    return name;
+  },
+
 
   getCurrentOwner: function(serial) {
       var self = this;
@@ -152,7 +158,7 @@ window.App = {
 
   getOwnerHistory: function(serial) {
       var self = this;
-      var history = smartContract.getOwnerHistoryArray(serial);
+      var history = smartContract.getOwnerHistoryArray.call(serial);
 
       // SupplyChain.deployed().then(function(instance) {
       //     history = instance.getOwnerHistoryArray(serial, {from: account});
@@ -255,7 +261,7 @@ window.App = {
 
   getSalePrice: function(serial) {
     var self = this;
-    var salePrice = smartContract.getSalePrice.call(serial);
+    var salePrice = smartContract.getSalePrice.call(serial).toNumber();
     // SupplyChain.deployed().then(function(instance) {
     //     ownedItems = instance.getSalePrice(id);
 

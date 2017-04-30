@@ -458,6 +458,13 @@ contract SupplyChain {
             return false;
         }
         return true;
+    }
+
+    function getOwnerName(address addr) public constant returns (string){
+        if(owners[addr].addr != addr){
+            throw;
+        }
+        return owners[addr].name;
 
     }
 

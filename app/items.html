@@ -25,6 +25,7 @@
             <th>Name</th>
             <th>Price</th>
             <th>Owner</th>
+            <th>Purchase</th>
         </table>
     </div>
 
@@ -64,7 +65,14 @@
                                             "<td>" + name    + "</td>" +
                                             "<td>" + price   + "</td>" +
                                             "<td>" + owner   + "</td>" +
+                                            "<td><button id=" + id + " type=\"button\" class=\"btn btn-default buy-submit\" >Purchase</button></td>" +
                                         "</tr>");
+            });
+
+            $('.buy-submit').on('click', function(event) {
+                var status = App.purchaseItem(event.target.id);
+                alert(status);
+                location.reload();
             });
 
         });
