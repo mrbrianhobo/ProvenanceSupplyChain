@@ -104,9 +104,6 @@
                         var parents = '';
                         var parentsArray = App.getItemParents(id);
 
-                        if (parentsArray.length == 0){
-                            parents = "N/A";
-                        }
 
                         for(var index = 0; index < parentsArray.length; index++){
                             if(index == 0){
@@ -118,13 +115,16 @@
                             }
                         }
 
+                        if (parentsArray.length == 0 || parentsArray[0].toNumber() == 0){
+                            parents = "N/A";
+                        }
 
                         for(var i = 0; i < histArray.length; i++){
                             if (i == 0) {
                                 hist += App.getOwnerName(histArray[i]);
                             }
                             else {
-                                hist += '&rarr';
+                                hist += '&rarr;';
                                 hist += App.getOwnerName(histArray[i]);
                             }
                         }

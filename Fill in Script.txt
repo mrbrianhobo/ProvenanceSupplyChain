@@ -1,0 +1,24 @@
+App.swapAccount(2);
+App.joinContract("Manufacturer2");
+App.addItem(12345, "Amoxicillin");
+App.addItem(24678, "Fluoxetine" );
+App.addItem(36912, "Esomeprazole Magnesium" );
+App.markForSale(12345, 10);
+App.markForSale(24678, 250);
+App.markForSale(36912, 180);
+
+App.swapAccount(3);
+App.joinContract("DuPont");
+App.deposit(100);
+App.purchaseItem(12345);
+App.markForSale(12345, 80);
+App.addItem(13351, "Titanium Dioxide");
+App.markForSale(12345, 340);
+App.markForSale(13351, 100);
+
+App.swapAccount(4);
+App.joinContract("Bayer Corporation");
+App.addItem(44123, "Asprin");
+App.markForSale(44123, 15);
+
+App.swapAccount(0);

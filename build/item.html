@@ -36,6 +36,7 @@
                         <th>For Sale?</th>
                         <th>Sale Price</th>
                         <th>Active?</th>
+                        <th>Parents</th>
                         <th>History</th>
                     </tr>
                 </thead>
@@ -47,6 +48,7 @@
                         <td id='item-sale-cell'>For Sale?</td>
                         <td id='item-price-cell'>Sale Price</td>
                         <td id='item-status-cell'>Active?</td>
+                        <td id='item-parents-cell'>Parents</td>
                         <td id='item-history-cell'>History</td>
                     </tr>
                 </tbody>
@@ -99,12 +101,30 @@
                         var status  = App.getIsActive(id);
                         var histArray = App.getOwnerHistory(id);
                         var hist = '';
+                        var parents = '';
+                        var parentsArray = App.getItemParents(id);
+
+
+                        for(var index = 0; index < parentsArray.length; index++){
+                            if(index == 0){
+                                parents += '&#8627;<a href="/item.html?id=' + parentsArray[index] + '">' + parentsArray[index] + '</a>';
+                            }
+                            else {
+                                parents += ", "
+                                parents += '&#8627;<a href="/item.html?id=' + parentsArray[index] + '">' + parentsArray[index] + '</a>';
+                            }
+                        }
+
+                        if (parentsArray.length == 0 || parentsArray[0].toNumber() == 0){
+                            parents = "N/A";
+                        }
+
                         for(var i = 0; i < histArray.length; i++){
                             if (i == 0) {
                                 hist += App.getOwnerName(histArray[i]);
                             }
                             else {
-                                hist += '&rarr';
+                                hist += '&rarr;';
                                 hist += App.getOwnerName(histArray[i]);
                             }
                         }
@@ -113,7 +133,11 @@
                         if (forSale == true) {
                             salePrice = '$' + parseFloat(App.getSalePrice(id)).formatMoney();
                         } else {
+                            forSale = "false";
                             salePrice = '<em>N/A</em>';
+                        }
+                        if(status != true){
+                            status = "false";
                         }
 
                         $('#item-id-cell').html(id);
@@ -122,6 +146,7 @@
                         $('#item-sale-cell').html(forSale);
                         $('#item-price-cell').html(salePrice);
                         $('#item-status-cell').html(status);
+                        $('#item-parents-cell').html(parents);
                         $('#item-history-cell').html(hist)
                     }
                 }
