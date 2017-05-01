@@ -28,7 +28,9 @@
             </div>
 
         <div class='col-md-8'>
-            <h2>Manage Items <i id='add-item-submit' class='fa fa-plus-circle'></i></h2><!--<small>&nbsp;<a href='#'>Add Item</a></small></h2> -->
+            <h2>Manage Items&nbsp;&nbsp;<i id='add-item-submit' class='fa fa-plus-circle'></i>&nbsp;&nbsp;<button id='create-item' type='button' class='btn btn-default'>Create Item</button></h2>
+
+            <!--<small>&nbsp;<a href='#'>Add Item</a></small></h2> -->
             <hr>
             <table class='table' id='items-table' style='width:600px'>
                 <thead>
@@ -108,7 +110,8 @@
 
             $('#deposit-submit').on('click', function(event) {
                 swal({
-                    title: 'Enter amount to deposit',
+                    title: "Deposit",
+                    text: 'Enter amount to deposit.',
                     input: 'number',
                     showCancelButton: true,
                     confirmButtonText: 'Deposit',
@@ -151,7 +154,13 @@
                     animation: true,
                     progressSteps: ['1', '2'],
                 });
-                var steps = ['Input Name', 'Input Serial Number',];
+                var steps = [{
+                                title: "Item Name",
+                                text: "Enter the name of your item."
+                            }, {
+                                title: "Item Serial",
+                                text: "Enter the serial number for this item."
+                            }];
                 swal.queue(steps).then(function(result) {
                     swal.resetDefaults();
                     var id  = parseInt(result[1]);
@@ -160,7 +169,8 @@
                     var response = App.addItem(id, name);
                     if (response.includes('You have successfully')) {
                         swal({
-                            title: 'Successfully added ' + name + ' (id #' + id + ')',
+                            title: 'Sucess!',
+                            html: 'Successfully added ' + name + ' (id #' + id + ')',
                             type: 'success',
                             confirmButtonText: 'Close',
                             showCancelButton: false,
@@ -170,8 +180,63 @@
                     }
                     else {
                         swal({
-                            title: 'Failed to add ' + name + ' (id #' + id + ')',
-                            html: response,
+                            title: response,
+                            html: 'Failed to add ' + name + ' (id #' + id + ')',
+                            type: 'error',
+                            confirmButtonText: 'Close',
+                            showCancelButton: false,
+                        });
+                    }
+                }, function () {
+                    swal.resetDefaults()
+                });
+            });
+
+
+            $('#create-item').on('click', function(event) {
+                swal.setDefaults({
+                    input: 'text',
+                    confirmButtonText: 'Next &rarr;',
+                    showCancelButton: true,
+                    animation: true,
+                    progressSteps: ['1', '2', '3'],
+                });
+                var steps = [{
+                                title: "Item Name",
+                                text: "Enter the name of your item."
+                            }, {
+                                title: "Item Serial",
+                                text: "Enter the serial number for this item."
+                            }, {
+                                title: "Choose Items",
+                                text: "Enter the item serials you wish to use."
+                            }];
+                swal.queue(steps).then(function(result) {
+                    swal.resetDefaults();
+                    var id  = parseInt(result[1]);
+                    var name = result[0];
+                    var parents = result[2].split(",");
+
+                    for (var x = 0; x < parents.length; x++) {
+                        parents[x] = parseInt(parents[x]);
+                    }
+
+                    var response = App.createNewItem(id, name, parents);
+                    if (response.includes('You have successfully')) {
+                        swal({
+                            title: 'Sucess!',
+                            html: 'Successfully added ' + name + ' (id #' + id + ')',
+                            type: 'success',
+                            confirmButtonText: 'Close',
+                            showCancelButton: false,
+                        }).then(function() {
+                            populateTable();
+                        });
+                    }
+                    else {
+                        swal({
+                            title: response,
+                            html: 'Failed to add ' + name + ' (id #' + id + ')',
                             type: 'error',
                             confirmButtonText: 'Close',
                             showCancelButton: false,
@@ -188,7 +253,8 @@
                 var id = parseInt(event.target.id.replace('item-', ''));
                 if (event.target.checked) {
                     swal({
-                        title: 'Enter price for item',
+                        title: "Mark For Sale",
+                        text: 'Enter price for the item.',
                         input: 'number',
                         showCancelButton: true,
                         confirmButtonText: 'Set Price',
