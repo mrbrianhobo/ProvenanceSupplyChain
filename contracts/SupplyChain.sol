@@ -176,7 +176,7 @@ contract SupplyChain {
         }
 
         for(uint i = 0; i < parent.length; i++){
-           if(items[parent[i]].identification != parent[i] || !items[parent[i]].active){
+           if(items[parent[i]].identification != parent[i] || !items[parent[i]].active || items[parent[i]].forSale){
             throw; 
            }
             items[parent[i]].currentOwner = 0;
@@ -207,6 +207,10 @@ contract SupplyChain {
 
         if (price < 0) {
             return "Not a valid price";
+        }
+
+        if(!items[serial].active){
+            return "Item is not active";
         }
 
         bool contains = false;
