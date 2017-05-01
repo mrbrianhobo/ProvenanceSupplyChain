@@ -28,9 +28,15 @@
             </div>
 
         <div class='col-md-8'>
-            <h2>Manage Items&nbsp;&nbsp;<i id='add-item-submit' class='fa fa-plus-circle'></i>&nbsp;&nbsp;<button id='create-item' type='button' class='btn btn-default'>Create Item</button></h2>
+            <h2>Manage Items
+                <a href="#" data-toggle="tooltip" title="New Item" class="no-underline">
+                    <i id='add-item-submit' class='fa fa-plus-circle action-icon'></i>
+                </a>
+                <a href="#" data-toggle="tooltip" title="Construct Item" class="no-underline">
+                    <i id='create-item' class="fa fa-flask action-icon"></i>
+                </a>
+            </h2>
 
-            <!--<small>&nbsp;<a href='#'>Add Item</a></small></h2> -->
             <hr>
             <table class='table' id='items-table' style='width:600px'>
                 <thead>
@@ -58,6 +64,9 @@
             $('#insert-navbar').load('nav.html');
             window.displayBalance();
             $('.name-display').html('<strong>Account name: </strong>' + App.getMyName());
+
+            // $("[rel='tooltip']").tooltip();
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 
             function populateTable() {
                 $('#items-table tbody').empty()

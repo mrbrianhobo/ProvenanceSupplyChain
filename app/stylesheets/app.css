@@ -35,3 +35,17 @@ th {
     cursor: pointer;
     cursor: hand;
 }
+
+.action-icon {
+    color: #000000;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.action-icon:hover {
+    color: #666666;
+}
+
+.no-underline:hover {
+    text-decoration: none;
+}
