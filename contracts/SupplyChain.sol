@@ -176,6 +176,9 @@ contract SupplyChain {
         }
 
         for(uint i = 0; i < parent.length; i++){
+           if(items[parent[i]].identification != parent[i] || !items[parent[i]].active){
+            throw; 
+           }
             items[parent[i]].currentOwner = 0;
             items[parent[i]].active = false;
             first.ownedItems = remove(first.ownedItems, parent[i]);
