@@ -225,10 +225,21 @@
                     var id  = parseInt(result[1]);
                     var name = result[0];
                     var parents = result[2].split(",");
+                    var owned = App.getOwnedItems();
 
                     for (var x = 0; x < parents.length; x++) {
                         parents[x] = parseInt(parents[x]);
+                        if(!owned.includes(parents[x])){
+                            swal({
+                            title: response,
+                            html: 'You do not own ' + parents[x],
+                            type: 'error',
+                            confirmButtonText: 'Close',
+                            showCancelButton: false,
+                        });
+                        }
                     }
+
 
                     var response = App.createNewItem(id, name, parents);
                     if (response.includes('You have successfully')) {
