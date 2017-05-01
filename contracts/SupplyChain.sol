@@ -1,7 +1,7 @@
 pragma solidity ^0.4.8;
 
 import "./strings.sol";
-
+//import "github.com/Arachnid/solidity-stringutils/strings.sol";
 contract SupplyChain {
 
     using strings for *;
@@ -113,8 +113,59 @@ contract SupplyChain {
 
     //Insert "recipe" based items and make sure you own the items
 
-    function createNewSoda(uint serial, string n) public returns (string) {
-        // Requires sugar 12345 and water 13579
+    // function createNewSoda(uint serial, string n) public returns (string) {
+    //     // Requires sugar 12345 and water 13579
+    //     if (items[serial].identification == serial) {
+    //         return "Item already exists. Try again";
+    //     }
+
+    //     Owner first = owners[msg.sender];
+    //     if (first.addr != msg.sender) {
+    //         return "You are not a valid owner";
+    //     }
+    //     uint hasSugar = 2**256 - 1;
+    //     uint hasWater = 2**256 - 1;
+    //     for(uint i = 0; i < first.ownedItems.length; i++){
+    //         if(hasSugar == 2**256 - 1 && items[first.ownedItems[i]].iname.toSlice().equals("Sugar".toSlice()) && !items[first.ownedItems[i]].forSale){
+    //             hasSugar = i;
+    //         }
+    //         if(hasWater == 2**256 - 1 && items[first.ownedItems[i]].iname.toSlice().equals("Water".toSlice()) && !items[first.ownedItems[i]].forSale){
+    //             hasWater = i;
+    //         }
+
+    //     }
+    //     if(hasSugar == 2**256 - 1 || hasWater == 2**256 - 1){
+    //         return "You do not own the ingredients";
+    //     } 
+
+    //     items[first.ownedItems[hasSugar]].currentOwner = 0;
+    //     items[first.ownedItems[hasSugar]].active = false;
+    //     items[first.ownedItems[hasSugar]].currentOwner = 0;
+    //     items[first.ownedItems[hasWater]].active = false;
+        
+    //     uint[] memory parent;
+    //     // parent.push(first.ownedItems[hasSugar]);
+    //     // parent.push(first.ownedItems[hasWater]);
+
+    //     uint sugarID = first.ownedItems[hasSugar];
+    //     uint waterID = first.ownedItems[hasWater];
+        
+    //     updateOwnedItems(first, first.ownedItems[hasSugar], first.ownedItems[hasWater]); 
+
+    //     first.ownedItems.push(serial);
+        
+    //     items[serial] = Item(serial, n, new address[](0), false, first.addr, 2**256 - 1, true, parent); //Add item into mapping
+    //     items[serial].ownerHistory.push(msg.sender); //adds owner of item as first owner
+    //     numItems++; //Increment number of items
+
+    //     items[serial].parents.push(sugarID);
+    //     items[serial].parents.push(waterID);
+
+    //     return "You have successfully added an item: ".toSlice().concat(n.toSlice());
+
+    // }
+
+    function createItemWithParents(uint serial, string n, uint[] parent) returns (string){
         if (items[serial].identification == serial) {
             return "Item already exists. Try again";
         }
@@ -123,54 +174,21 @@ contract SupplyChain {
         if (first.addr != msg.sender) {
             return "You are not a valid owner";
         }
-        uint hasSugar = 2**256 - 1;
-        uint hasWater = 2**256 - 1;
-        for(uint i = 0; i < first.ownedItems.length; i++){
-            if(hasSugar == 2**256 - 1 && items[first.ownedItems[i]].iname.toSlice().equals("Sugar".toSlice()) && !items[first.ownedItems[i]].forSale){
-                hasSugar = i;
-            }
-            if(hasWater == 2**256 - 1 && items[first.ownedItems[i]].iname.toSlice().equals("Water".toSlice()) && !items[first.ownedItems[i]].forSale){
-                hasWater = i;
-            }
 
+        for(uint i = 0; i < parent.length; i++){
+            items[parent[i]].currentOwner = 0;
+            items[parent[i]].active = false;
+            first.ownedItems = remove(first.ownedItems, parent[i]);
         }
-        if(hasSugar == 2**256 - 1 || hasWater == 2**256 - 1){
-            return "You do not own the ingredients";
-        }
-        
-
-        items[first.ownedItems[hasSugar]].currentOwner = 0;
-        items[first.ownedItems[hasSugar]].active = false;
-        items[first.ownedItems[hasSugar]].currentOwner = 0;
-        items[first.ownedItems[hasWater]].active = false;
-        
-        uint[] memory parent;
-        // parent.push(first.ownedItems[hasSugar]);
-        // parent.push(first.ownedItems[hasWater]);
-
-        uint sugarID = first.ownedItems[hasSugar];
-        uint waterID = first.ownedItems[hasWater];
-        
-        updateOwnedItems(first, first.ownedItems[hasSugar], first.ownedItems[hasWater]); 
-
-        
 
         first.ownedItems.push(serial);
-        
+
         items[serial] = Item(serial, n, new address[](0), false, first.addr, 2**256 - 1, true, parent); //Add item into mapping
-        items[serial].ownerHistory.push(msg.sender); //adds owner of item as first owner
-        numItems++; //Increment number of items
-
-        items[serial].parents.push(sugarID);
-        items[serial].parents.push(waterID);
-
-        
+        items[serial].ownerHistory.push(msg.sender);
 
         return "You have successfully added an item: ".toSlice().concat(n.toSlice());
 
     }
-
-
 
 
     function markForSale(uint serial, uint price) public returns (string) {
@@ -277,7 +295,7 @@ contract SupplyChain {
             Owner curr = owners[i.currentOwner];
             curr.value += i.salePrice;
             
-            curr.ownedItems = remove(curr.ownedItems,serial); //Remove the item from the previous owners owner's list
+            curr.ownedItems = remove(curr.ownedItems, serial); //Remove the item from the previous owners owner's list
             newOwner.ownedItems.push(i.identification);
             i.ownerHistory.push(msg.sender);
             i.currentOwner = newOwner.addr;

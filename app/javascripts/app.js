@@ -158,10 +158,10 @@ window.App = {
     return addCheck; // an alert
   },
 
-  addSoda: function(serial, name){
+  createNewItem: function(serial, name, parents){
     var self = this;
-    var addCheck = smartContract.createNewSoda.call(serial, name);
-    var added = smartContract.createNewSoda.sendTransaction(serial, name, {from: EthClient.eth.accounts[0], gas:1000000});
+    var addCheck = smartContract.createItemWithParents.call(serial, name, parents);
+    var added = smartContract.createItemWithParents.sendTransaction(serial, name, parents, {from: EthClient.eth.accounts[0], gas:1000000});
     return addCheck; // an alert
   },
 
