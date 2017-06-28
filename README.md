@@ -7,6 +7,7 @@ SupplyChain Framework written in Solidity and deployed with [Truffle](https://gi
  * Creating items from pre-existing items
  * Selling items to peers in the contract
  * Tracking owner history of items
+ * Tracking item parents
  * Item search
 
 ## Additional Information ##
