@@ -29,6 +29,6 @@ To initialize this project, clone the repository and follow the steps below.
 ## Building and the frontend
 1. In an empty terminal, run `testrpc` to initialize a default testrpc server.
 2. In a separate terminal, run `truffle compile`, then run `truffle migrate --reset` to deploy the contracts onto your network of choice (default "development").
-3. Copy the contract address that shows up on the testrpc terminal and paste it into the `contractAddress` variable in`SmartContractSetup.js`
+3. Copy the SupplyChain: contract address that shows up on the truffle terminal and testrpc terminal and paste it into the `contractAddress` variable in`SmartContractSetup.js`
 4. Then run `npm run build` to build the app.
 5. Finally, run `truffle serve` to serve it on http://localhost:8080.
